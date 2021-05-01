@@ -1,0 +1,9 @@
+[ 
+    { 
+      "label": "Quick-Sort", 
+      "name": "toSort", 
+      "type": "text", 
+      "default": "4,2,1,5", 
+      "description": "The unsorted list displayed to the end user."
+    }
+  ]

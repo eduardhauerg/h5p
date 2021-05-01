@@ -1,0 +1,22 @@
+{
+    "title": "Quick-Sort",
+    "description": "Lets the user sort a list",
+    "majorVersion": 1,
+    "minorVersion": 0,
+    "patchVersion": 1,
+    "runnable": 1,
+    "author": "Eduard",
+    "license": "cc-by-sa",
+    "machineName": "H5P.QuickSort",
+    "coreApi": {
+      "majorVersion": 1,
+      "minorVersion": 19
+    },
+    "preloadedJs": [
+      { "path": "Quicksort.js" }
+    ],
+
+    "preloadedCss": [
+        { "path": "Quicksort.css" }
+      ]
+  }

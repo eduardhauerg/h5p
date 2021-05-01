@@ -1,0 +1,53 @@
+.QuickSort {
+    width: 400px;
+    margin: 0 auto;
+    border: 1px solid #ccc;
+    box-shadow: 2px 2px 4px #ccc;
+  }
+
+  .QuickSort .greeting-text {
+    width: auto;
+    margin: 28px;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 30px;
+    font-weight: bold;
+    line-height: 14px;
+    text-align: center;
+  }
+
+
+.QuickSort .inputSwap {
+    display: inline-block;
+}
+
+.QuickSort #InputSwap {
+    width: 50px;
+}
+.QuickSort #InputSwapFirst {
+    width: 15px;
+    height: 10px;
+}
+
+.QuickSort #InputSwapSecond {
+    width: 15px;
+    height: 10px;
+}
+
+.QuickSort .inputPart {
+    display: inline-block;
+}
+
+.QuickSort #InputPart {
+    width: 50px;
+}
+.QuickSort #InputPartFirst {
+    width: 15px;
+    height: 10px;
+}
+
+.QuickSort #InputPartSecond {
+    width: 15px;
+    height: 10px;
+}
+
+
