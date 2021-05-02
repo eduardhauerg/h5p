@@ -5,5 +5,13 @@
       "type": "text", 
       "default": "4,2,1,5", 
       "description": "The unsorted list displayed to the end user."
+    },
+
+    { 
+      "label": "Pivot-Element", 
+      "name": "pivot", 
+      "type": "number", 
+      "default": 0, 
+      "description": "Index of the initial Pivot"
     }
   ]

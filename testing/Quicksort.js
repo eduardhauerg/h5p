@@ -1,3 +1,5 @@
+
+
 var H5P = H5P || {};
  
 H5P.QuickSort = (function ($) {
@@ -7,14 +9,14 @@ H5P.QuickSort = (function ($) {
   function C(options, id) {
     // Extend defaults with provided options
     this.options = $.extend(true, {}, {
-        toSort: '42'
+        toSort: '42',
+        pivot: '0'
     }, options);
     // Keep provided id.
     this.id = id;
-    this.list = this.options.toSort.split(',').map(x =>+x);
-    this.list = quickSort(this.list, 0, this.list.length - 1);
-    
+    this.options.toSort = this.options.toSort.split(',').map(x =>+x);
 
+    //this.options.toSort = quickSort(this.options.toSort, 0, this.options.toSort.length - 1);
   }; 
 
   /**
@@ -22,21 +24,20 @@ H5P.QuickSort = (function ($) {
    * page
    *
    * @param {jQuery} $container
+   * 
    */
   C.prototype.attach = function ($container) {
 
     // Set class on container to identify it as a greeting card
     // container.  Allows for styling later.
     $container.addClass("QuickSort");
-    // Add image if provided.
 
-    // Add greeting text.
     $container.append('<div class="greeting-text">' + this.options.toSort+ '</div>');
-    $container.append('<div class="greeting-text">' + this.list+ '</div>');
+    $container.append('<div class="greeting-text">' + this.options.pivot+ '</div>');
 
-    $container.append('<button id="ButtonSwap" class="inputSwap" type="button" id="swapBtn">Swap</button>');
+    $container.append('<button id="ButtonSwap" class="inputSwap" type="button" id="swapBtn" onclick="testM()">Swap</button>');
     $container.append('<label id="InputSwapLeftBracket" class="inputSwap" for="swap">(</label> ');
-    $container.append('<input id="InputSwapFirst" class="inputSwap" type="text"/>');
+    $container.append('<input id="InputSwapFirst" type="text" class="inputSwap" />');
     $container.append('<label id="InputSwapComma" class="inputSwap" for="partition">,</label> ');
     $container.append('<input id="InputSwapSecond" class="inputSwap" type="text"/>'); 
     $container.append('<label id="InputSwapRightBracket" class="inputSwap" for="partition">)</label> ');
@@ -48,17 +49,26 @@ H5P.QuickSort = (function ($) {
     $container.append('<input id="InputPartSecond" class="inputPart" type="text"/>'); 
     $container.append('<label id="InputPartRightBracket" class="inputPart" for="partition">)</label> ');
 
+    $container.append('<button id="start"> Start </button>');
 
-  };
+    this.testf = function() {
+        console.log("AHA");
+        console.log(this.options.pivot);
+    }
+
+    this.testf();
+
+ 
+};
  
   return C;
 })(H5P.jQuery);
 
-
-
-
 //var items = [5,3,7,6,2,9]; 
-function swap(items, leftIndex, rightIndex){
+function swap(items, leftIndex, rightIndex) {
+
+    var first = 5;
+    var scnd = 5;
     var temp = items[leftIndex];
     items[leftIndex] = items[rightIndex];
     items[rightIndex] = temp;
