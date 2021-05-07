@@ -1,4 +1,7 @@
-
+/*
+ein weitere attribut, in dem jeder swap und jeder part gespeichert wird. 
+nachdem der alg gelaufen ist, dieses array mit den eingaben des users validieren. 
+*/
 
 var H5P = H5P || {};
  
@@ -14,6 +17,7 @@ H5P.QuickSort = (function ($) {
     // Keep provided id.
     this.id = id;
     this.options.toSort = this.options.toSort.split(',').map(x =>+x);
+    this.data = [];
 
     //this.options.toSort = quickSort(this.options.toSort, 0, this.options.toSort.length - 1);
     self.attach = function ($container) {
@@ -40,11 +44,16 @@ H5P.QuickSort = (function ($) {
         $container.append('<label id="InputPartRightBracket" class="inputPart" for="partition">)</label> ');
     
         $container.append('<button id="start"> Start </button>');
+
+        function validation(given, reference) {
+            b = (given == reference);
+            return b;
+        } 
     
         function swap(items, leftIndex, rightIndex) {
-            var first = document.getElementById("InputSwapFirst").value;
-            var sec = document.getElementById("InputSwapSecond").value;            
-  
+            self.data.push(leftIndex);
+            self.data.push(rightIndex);
+
             var temp = items[leftIndex];
             items[leftIndex] = items[rightIndex];
             items[rightIndex] = temp;
@@ -61,7 +70,7 @@ H5P.QuickSort = (function ($) {
                 while (items[j] > pivot) {
                     j--;
                 }
-                if (i <= j) {
+                if (i <= j) {                      
                     swap(items, i, j); //sawpping two elements
                     i++;
                     j--;
@@ -84,13 +93,10 @@ H5P.QuickSort = (function ($) {
             }
             return items;
         }
-    
-    
-    
         document.getElementById("start").onclick = function() {
             quickSort(self.options.toSort, 0, self.options.toSort.length -1);
-        }
-    
+            console.log(self.data);
+        }    
     };
 
   }; 
