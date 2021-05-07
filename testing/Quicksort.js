@@ -12,12 +12,15 @@ H5P.QuickSort = (function ($) {
     // Extend defaults with provided options
     this.options = $.extend(true, {}, {
         toSort: '0',
-        pivot: '0'
+        //pivot: '0'
     }, options);
     // Keep provided id.
     this.id = id;
     this.options.toSort = this.options.toSort.split(',').map(x =>+x);
+    this.toDisplay = this.options.toSort;
     this.data = [];
+    this.fData = [];
+    this.b = false;
 
     //this.options.toSort = quickSort(this.options.toSort, 0, this.options.toSort.length - 1);
     self.attach = function ($container) {
@@ -26,8 +29,8 @@ H5P.QuickSort = (function ($) {
         // container.  Allows for styling later.
         $container.addClass("QuickSort");
     
-        $container.append('<div class="greeting-text">' + this.options.toSort+ '</div>');
-        $container.append('<div class="greeting-text">' + this.options.pivot+ '</div>');
+        $container.append('<div class="greeting-text" id="list">' + this.toDisplay+ '</div>');
+        //$container.append('<div class="greeting-text">' + this.options.pivot+ '</div>');
     
         $container.append('<button id="ButtonSwap" class="inputSwap" type="button" id="swapBtn">Swap</button>');
         $container.append('<label id="InputSwapLeftBracket" class="inputSwap" for="swap">(</label> ');
@@ -46,11 +49,11 @@ H5P.QuickSort = (function ($) {
         $container.append('<button id="start"> Start </button>');
 
         function validation(given, reference) {
-            b = (given == reference);
-            return b;
+            return (given == reference);
         } 
     
         function swap(items, leftIndex, rightIndex) {
+            self.fData.push(0);
             self.data.push(leftIndex);
             self.data.push(rightIndex);
 
@@ -59,44 +62,103 @@ H5P.QuickSort = (function ($) {
             items[rightIndex] = temp;
         }
         
-        function partition(items, left, right) {
-            var pivot   = items[Math.floor((right + left) / 2)], //middle element
-                i       = left, //left pointer
-                j       = right; //right pointer
-            while (i <= j) {
-                while (items[i] < pivot) {
+        function partition(items, li, re, piv) {
+            i       = li; //left pointer
+            j       = re - 1; //right pointer
+            k = items[piv]; //middle element
+            swap(items, piv, re);
+     
+            while (i < j) {
+                while (items[i] <= k && i < re) {
                     i++;
                 }
-                while (items[j] > pivot) {
+                while (items[j] >= k && j > li) {
                     j--;
                 }
-                if (i <= j) {                      
+                if (i < j) {
                     swap(items, i, j); //sawpping two elements
-                    i++;
-                    j--;
                 }
+            }
+            if (items[i] > k) {
+                swap(items, i, re);
             }
             return i;
         }
         
-        function quickSort(items, left, right) {
-            var index;
-            if (items.length > 1) {
-                console.log("qs");
-                index = partition(items, left, right); //index returned from partition
-                if (left < index - 1) { //more elements on the left side of the pivot
-                    quickSort(items, left, index - 1);
-                }
-                if (index < right) { //more elements on the right side of the pivot
-                    quickSort(items, index, right);
-                }
+        function quickSort(items, li, re) {
+            if(self.b) {
+                self.fData.push(1);
+                self.data.push(li);
+                self.data.push(re);
             }
-            return items;
+            self.b = true;
+
+            if(li < re) {
+                pivpos = items[Math.floor((li + re) / 2)];
+                pivpos = partition(items, li,re,pivpos);
+
+            }
+            quickSort(items, li, pivpos - 1);
+            quickSort(items, pivpos + 1, re);
+
         }
-        document.getElementById("start").onclick = function() {
-            quickSort(self.options.toSort, 0, self.options.toSort.length -1);
-            console.log(self.data);
-        }    
+
+        
+        quickSort(self.options.toSort, 0, self.options.toSort.length - 1);
+        console.log(self.data);
+        console.log(self.fData);
+
+        //pruefe hier als erstes, ob das erste element im zweiten array das korrekte ist. sonst direkt false 
+        document.getElementById("ButtonSwap").onclick = function() {
+            if(self.fData[0] == 0){
+                var swapFirstRef = self.data[0];
+                var swapSecRef = self.data[1];
+
+                var swapFirstIn = document.getElementById("InputSwapFirst").value;
+                var swapSecIn = document.getElementById("InputSwapSecond").value;
+
+                if( validation(swapFirstIn, swapFirstRef) && validation(swapSecIn, swapSecRef )) {
+                    self.data.shift();
+                    self.data.shift();
+                    self.fData.shift();
+
+                    console.log("richtig!");
+                    var temp = self.toDisplay[swapFirstRef];
+                    self.toDisplay[swapFirstRef] = self.toDisplay[swapSecRef];
+                    self.toDisplay[swapSecRef] = temp;
+                    document.getElementById("list").innerHTML = self.toDisplay;
+                } else {
+                    console.log("leider falsch");
+                }
+            }else{
+                console.log("Falsche Methode");
+            }
+        }
+        
+        document.getElementById("ButtonPart").onclick = function() {
+            if(self.fData[0] == 1) {
+                var partFirstRef = self.data[0];
+                var partSecRef = self.data[1];
+
+                var partFirstIn = document.getElementById("InputPartFirst").value;
+                var partpSecIn = document.getElementById("InputPartSecond").value;
+
+                if( validation( partFirstIn, partFirstRef) && validation(partpSecIn, partSecRef )) {
+                    self.data.shift();
+                    self.data.shift();
+                    self.fData.shift();
+
+                    console.log("richtig!");
+                    self.toDisplay = self.toDisplay.slice(partFirstRef, partSecRef);   
+                    document.getElementById("list").innerHTML = self.toDisplay;
+                } else {
+                    console.log("leider falsch");
+                }
+            } else {
+                console.log("Falsche Methode");
+            }
+        }
+        
     };
 
   }; 
