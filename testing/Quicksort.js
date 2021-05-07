@@ -63,9 +63,16 @@ H5P.QuickSort = (function ($) {
         }
         
         function partition(items, li, re, piv) {
-            i       = li; //left pointer
-            j       = re - 1; //right pointer
-            k = items[piv]; //middle element
+            if(self.b) {
+                self.fData.push(1);
+                self.data.push(li);
+                self.data.push(re);
+            }
+            self.b = true;
+
+            i = li; //left pointer
+            j = re - 1; //right pointer
+            k = items[piv]; 
             swap(items, piv, re);
      
             while (i < j) {
@@ -84,29 +91,30 @@ H5P.QuickSort = (function ($) {
             }
             return i;
         }
-        
-        function quickSort(items, li, re) {
-            if(self.b) {
-                self.fData.push(1);
-                self.data.push(li);
-                self.data.push(re);
-            }
-            self.b = true;
 
-            if(li < re) {
-                pivpos = items[Math.floor((li + re) / 2)];
+        function quickSort(items, li, re) {
+
+           if(li < re) {
+                //pivpos = Math.floor(items.length / 2) - 1;
+                pivpos = Math.floor((li+(re+1)) / 2);
+                console.log(pivpos);
                 pivpos = partition(items, li,re,pivpos);
 
+                quickSort(items, li, pivpos - 1);
+                quickSort(items, pivpos + 1, re);
             }
-            quickSort(items, li, pivpos - 1);
-            quickSort(items, pivpos + 1, re);
-
         }
 
+        document.getElementById("start").onclick = function() {
+            console.log("liste: "+ self.options.toSort);
+            quickSort(self.options.toSort, 0, self.options.toSort.length - 1);
+            console.log(self.data);
+            console.log(self.fData);
+            console.log("liste: "+ self.options.toSort);
+
+        }
         
-        quickSort(self.options.toSort, 0, self.options.toSort.length - 1);
-        console.log(self.data);
-        console.log(self.fData);
+
 
         //pruefe hier als erstes, ob das erste element im zweiten array das korrekte ist. sonst direkt false 
         document.getElementById("ButtonSwap").onclick = function() {
