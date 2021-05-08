@@ -4,14 +4,15 @@
       "name": "toSort", 
       "type": "text", 
       "default": "4,2,1,5", 
-      "description": "The unsorted list displayed to the end user."
+      "description": "Die zu sortierende Liste hier eingeben. Die Zahlen bitte durch Komma getrennt eingeben. Maximal 10 Positionen. ",
+      "maxLength":"100"
     },
 
     { 
-      "label": "Pivot-Element", 
-      "name": "pivot", 
+      "label": "Partitionen", 
+      "name": "partsteps", 
       "type": "number", 
       "default": 0, 
-      "description": "Index of the initial Pivot"
+      "description": "Anzahl der Partitionierungen"
     }
   ]

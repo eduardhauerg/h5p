@@ -1,20 +1,26 @@
 .QuickSort {
-    width: 400px;
+    width: 600px;
+    height: 300px;
     margin: 0 auto;
     border: 1px solid #ccc;
     box-shadow: 2px 2px 4px #ccc;
   }
+ 
+ .QuickSort #UnLi{
+     display: inline-block;
+     font-size: 22px;
+ } 
 
-  .QuickSort .greeting-text {
+
+  .QuickSort .DummyList {
     width: auto;
-    margin: 28px;
+    margin: 15px;
     font-family: Arial, Helvetica, sans-serif;
-    font-size: 30px;
+    font-size: 22px;
     font-weight: bold;
     line-height: 14px;
     text-align: center;
   }
-
 
 .QuickSort .inputSwap {
     display: inline-block;
