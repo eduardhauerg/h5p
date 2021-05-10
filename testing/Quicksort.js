@@ -1,8 +1,6 @@
 /*
 TO-DO:
-#Fenstergröße in Moodle testen und ggf. anpassen
-#Indizierung des Arrays einblenden
-#Vorgewählte Elemente der Liste einfärben -> für jedes Element li der Liste ul eine id vergeben und zum einfärben nutzen
+Zu Ende durchführen und Testen 
 */ 
 
 var H5P = H5P || {};
@@ -44,12 +42,19 @@ H5P.QuickSort = (function ($) {
 
         $container.append('<ul style="list-style-type:none;" id="UnLi"> </ul>');
         $listSelector = $("#UnLi");
+
         $.each(this.toDisplay, function(index, number) {
             var new_html = number;
             $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html(new_html+"    "));
+
+            $('#'+index).mouseover(function() {
+                $('#IndexLabelInput').empty().append(index);
+            });
         });
 
         $container.append('<button id="ButtonSwap" class="inputSwap" type="button" id="swapBtn">Swap</button>');
+        $container.append('<label id="IndexLabel" for="partition">Index: </label> ');
+        $container.append('<label id="IndexLabelInput" for="partition"></label> ');
         document.getElementById("ButtonSwap").disabled = true;
         $container.append('<label id="InputSwapLeftBracket" class="inputSwap" for="swap">(</label> ');
         $container.append('<input id="InputSwapFirst" type="text" class="inputSwap" />');
@@ -59,11 +64,11 @@ H5P.QuickSort = (function ($) {
     
         $container.append('<button id="ButtonPart" class="inputPart" type="button" id="partBtn">Partitioniere</button>');
         document.getElementById("ButtonPart").disabled = true;
-        $container.append('<label id="InputPartLeftBracket" class="inputPart" for="partition">(</label> ');
+        /*$container.append('<label id="InputPartLeftBracket" class="inputPart" for="partition">(</label> ');
         $container.append('<input id="InputPartFirst" class="inputPart" type="text"/>');
         $container.append('<label id="InputPartComma" class="inputPart" for="partition">,</label> ');
         $container.append('<input id="InputPartSecond" class="inputPart" type="text"/>'); 
-        $container.append('<label id="InputPartRightBracket" class="inputPart" for="partition">)</label> ');
+        $container.append('<label id="InputPartRightBracket" class="inputPart" for="partition">)</label> ');*/
     
         $container.append('<button id="start"> Start </button>');
 
@@ -72,9 +77,35 @@ H5P.QuickSort = (function ($) {
         /**
          * Die Eingaben aus den Inputfeldern entnehmen und die Liste UnLi an den entsprechenden Index einfärben
          */
+        inputswapfirstBool = false;
         document.getElementById("InputSwapFirst").onchange = function() {
-            
+
+            if(inputswapfirstBool == true) {
+                document.getElementById(tempa).style.color = "black";
+            }
+
+            var a = document.getElementById("InputSwapFirst").value;
+            if(a  < self.options.toSort.length) {
+                inputswapfirstBool = true;
+                tempa = a;
+                document.getElementById(a).style.color = "red";
+            }
         }
+
+        inputswapsecondBool = false;
+        document.getElementById("InputSwapSecond").onchange = function() {
+            
+            if(inputswapsecondBool == true) {
+                document.getElementById(tempb).style.color = "black";
+            }
+
+            var b = document.getElementById("InputSwapSecond").value;
+            if(b  < self.options.toSort.length) {
+                inputswapsecondBool = true;
+                tempb = b;
+                document.getElementById(b).style.color = "red";
+            }
+        }            
 
         function swap(items, leftIndex, rightIndex) {
             self.fData.push(0);
@@ -97,9 +128,9 @@ H5P.QuickSort = (function ($) {
             }
             self.b = true;
 
-            i = li; //left pointer
-            j = re - 1; //right pointer
-            k = items[piv];
+            var i = li; //left pointer
+            var j = re - 1; //right pointer
+            var k = items[piv];
             swap(items, piv, re);
      
             while (i < j) {
@@ -169,12 +200,14 @@ H5P.QuickSort = (function ($) {
                 
                     self.toDisplay[swapFirstRef] = self.toDisplay[swapSecRef];
                     self.toDisplay[swapSecRef] = temp;
-                    //document.getElementById("list").innerHTML = self.toDisplay;
 
                     $listSelector = $("#UnLi").empty();
                     $.each(self.toDisplay, function(index, number) {
                         var new_html = number;
-                        $('#UnLi').append($('<class="horizontal" li></li>').html(new_html+"    "));
+                        $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html(new_html+"    "));
+                        $('#'+index).mouseover(function() {
+                            $('#IndexLabelInput').empty().append(index);
+                        });
                     });
 
                     var mydiv = document.getElementById("VerifiedInputs");
@@ -194,8 +227,8 @@ H5P.QuickSort = (function ($) {
                 var partFirstRef = self.data[0];
                 var partSecRef = self.data[1];
 
-                var partFirstIn = document.getElementById("InputPartFirst").value;
-                var partpSecIn = document.getElementById("InputPartSecond").value;
+                var partFirstIn = document.getElementById("InputSwapFirst").value;
+                var partpSecIn = document.getElementById("InputSwapSecond").value;
 
                 if( ( partFirstIn == partFirstRef) && (partpSecIn == partSecRef )) {
                     self.data.shift();
@@ -203,16 +236,16 @@ H5P.QuickSort = (function ($) {
                     self.fData.shift();
 
                     console.log("richtig!");
-                    self.toDisplay = self.toDisplay.slice(partFirstRef, partSecRef + 1);   
-                    //document.getElementById("list").innerHTML = self.toDisplay;
+                    self.toDisplay = self.options.toSort.slice(partFirstRef, partSecRef + 1);   
 
                     $listSelector = $("#UnLi").empty();
                     $.each(self.toDisplay, function(index, number) {
                         var new_html = number;
-                        $('#UnLi').append($('<class="horizontal" li></li>').html(new_html+"    "));
-                    });
-
-                    
+                        $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html(new_html+"    "));
+                        $('#'+index).mouseover(function() {
+                            $('#IndexLabelInput').empty().append(index);
+                        });
+                    });                  
                     var mydiv = document.getElementById("VerifiedInputs");
                     mydiv.appendChild(document.createTextNode("Partitioniere("+partFirstRef+","+partSecRef+")"  ));
                     if(self.options.partsteps == 0) {
