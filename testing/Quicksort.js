@@ -1,6 +1,7 @@
 /*
 TO-DO:
-Zu Ende durchführen und Testen 
+#Zu Ende durchführen und Testen 
+#wenn eine Zahl korrekt steht, grün markieren
 */ 
 
 var H5P = H5P || {};
@@ -17,6 +18,11 @@ H5P.QuickSort = (function ($) {
     // Keep provided id.
     this.id = id;
     this.options.toSort = this.options.toSort.split(',').map(x =>+ x);
+    //diese Variablen dienen dazu, die aktuelle Teilliste jederzeit abfragen zu können
+    this.currentBegin = 0;
+    this.currentEnd = this.options.toSort.length - 1;
+    this.sortet = [];
+    this.sortetTemp = [];
 
     //Wenn das Array mehr als die zulässigen 10 Positionen enthält, wird dieses gekürzt
     if(this.options.toSort.length > 10) {
@@ -76,19 +82,30 @@ H5P.QuickSort = (function ($) {
 
         /**
          * Die Eingaben aus den Inputfeldern entnehmen und die Liste UnLi an den entsprechenden Index einfärben
+         * Die Temp Variablen dienen zu Prüfung, ob bereits vorher eine Zahl rot gesetzt wurde
+         * Die Variablen elem und color dienen der Prüfung, ob das Element aktuelle grün ist, da die Farbe in dem Fall nicht mehr geändert werden soll    
          */
+
         inputswapfirstBool = false;
         document.getElementById("InputSwapFirst").onchange = function() {
-
             if(inputswapfirstBool == true) {
-                document.getElementById(tempa).style.color = "black";
+                var elem = document.getElementById(tempa);
+                var color = window.getComputedStyle(elem).getPropertyValue("color");
+                if(! (color === 'rgb(0, 128, 0)')) {
+                    document.getElementById(tempa).style.color = "black";
+                }
             }
 
             var a = document.getElementById("InputSwapFirst").value;
             if(a  < self.options.toSort.length) {
                 inputswapfirstBool = true;
                 tempa = a;
-                document.getElementById(a).style.color = "red";
+                var elem = document.getElementById(a);
+                var color = window.getComputedStyle(elem).getPropertyValue("color");
+
+                if( ! (color === 'rgb(0, 128, 0)')) {
+                    document.getElementById(a).style.color = "red";
+                }
             }
         }
 
@@ -96,14 +113,23 @@ H5P.QuickSort = (function ($) {
         document.getElementById("InputSwapSecond").onchange = function() {
             
             if(inputswapsecondBool == true) {
-                document.getElementById(tempb).style.color = "black";
+                var elem = document.getElementById(tempb);
+                var color = window.getComputedStyle(elem).getPropertyValue("color");
+                if(! (color === 'rgb(0, 128, 0)')) {
+                    document.getElementById(tempb).style.color = "black";
+                }
             }
 
             var b = document.getElementById("InputSwapSecond").value;
             if(b  < self.options.toSort.length) {
                 inputswapsecondBool = true;
                 tempb = b;
-                document.getElementById(b).style.color = "red";
+                var elem = document.getElementById(b);
+                var color = window.getComputedStyle(elem).getPropertyValue("color");
+
+                if( ! (color === 'rgb(0, 128, 0)')) {
+                    document.getElementById(b).style.color = "red";
+                }
             }
         }            
 
@@ -147,6 +173,7 @@ H5P.QuickSort = (function ($) {
             if (items[i] > k) {
                 swap(items, i, re);
             }
+            self.sortet.push(i);
             return i;
         }
 
@@ -205,10 +232,19 @@ H5P.QuickSort = (function ($) {
                     $.each(self.toDisplay, function(index, number) {
                         var new_html = number;
                         $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html(new_html+"    "));
+                        //Diese Abfrage dient dazu, nur die aktuelle Teilliste fett anzuzeigen
+                        if(index < self.currentBegin || index > self.currentEnd ) {
+                            console.log(index);
+                            $('#'+index).css("font-weight","normal");
+                        }
                         $('#'+index).mouseover(function() {
                             $('#IndexLabelInput').empty().append(index);
                         });
                     });
+
+                    for(i = 0; i < self.sortetTemp.length; i++) {
+                        $('#'+self.sortetTemp[i]).css("color","green");
+                    }
 
                     var mydiv = document.getElementById("VerifiedInputs");
                     mydiv.appendChild(document.createTextNode("Swap("+swapFirstRef+","+swapSecRef+")   "));
@@ -234,18 +270,34 @@ H5P.QuickSort = (function ($) {
                     self.data.shift();
                     self.data.shift();
                     self.fData.shift();
+                    self.currentBegin = partFirstRef;
+                    self.currentEnd = partSecRef;
 
                     console.log("richtig!");
-                    self.toDisplay = self.options.toSort.slice(partFirstRef, partSecRef + 1);   
 
                     $listSelector = $("#UnLi").empty();
+
                     $.each(self.toDisplay, function(index, number) {
                         var new_html = number;
                         $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html(new_html+"    "));
+                        //Diese Abfrage dient dazu, nur die aktuelle Teilliste fett anzuzeigen
+                        if(index < self.currentBegin || index > self.currentEnd ) {
+                            console.log(index);
+                            $('#'+index).css("font-weight","normal");
+                        }
+
                         $('#'+index).mouseover(function() {
                             $('#IndexLabelInput').empty().append(index);
                         });
-                    });                  
+                    });
+                    
+                    self.sortetTemp.push(self.sortet[0]);
+                    self.sortet.shift();
+                    for(i = 0; i < self.sortetTemp.length; i++) {
+                        $('#'+self.sortetTemp[i]).css("color","green");
+                    }
+
+
                     var mydiv = document.getElementById("VerifiedInputs");
                     mydiv.appendChild(document.createTextNode("Partitioniere("+partFirstRef+","+partSecRef+")"  ));
                     if(self.options.partsteps == 0) {
@@ -257,8 +309,7 @@ H5P.QuickSort = (function ($) {
             } else {
                 console.log("Falsche Methode");
             }
-        }
-        
+        }        
     };
 
   }; 
