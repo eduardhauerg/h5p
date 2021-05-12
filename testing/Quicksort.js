@@ -1,7 +1,8 @@
 /*
 TO-DO:
-#Zu Ende durchführen und Testen 
-#wenn eine Zahl korrekt steht, grün markieren
+#anzeige für das aktuelle pivot
+#wenn beide auf einer zahl stehen, macht der erste der weggeht, diese wieder schwarz
+#mehrere aufgaben auf einer Seite
 */ 
 
 var H5P = H5P || {};
@@ -9,7 +10,7 @@ var H5P = H5P || {};
 H5P.QuickSort = (function ($) {
 
   function C(options, id) {
-      var self = this;
+    var self = this;
     // Extend defaults with provided options
     this.options = $.extend(true, {}, {
         toSort: '0',
@@ -91,6 +92,7 @@ H5P.QuickSort = (function ($) {
             if(inputswapfirstBool == true) {
                 var elem = document.getElementById(tempa);
                 var color = window.getComputedStyle(elem).getPropertyValue("color");
+    
                 if(! (color === 'rgb(0, 128, 0)')) {
                     document.getElementById(tempa).style.color = "black";
                 }
@@ -110,11 +112,12 @@ H5P.QuickSort = (function ($) {
         }
 
         inputswapsecondBool = false;
-        document.getElementById("InputSwapSecond").onchange = function() {
-            
+        document.getElementById("InputSwapSecond").onchange = function() {           
             if(inputswapsecondBool == true) {
+
                 var elem = document.getElementById(tempb);
                 var color = window.getComputedStyle(elem).getPropertyValue("color");
+
                 if(! (color === 'rgb(0, 128, 0)')) {
                     document.getElementById(tempb).style.color = "black";
                 }
@@ -127,6 +130,7 @@ H5P.QuickSort = (function ($) {
                 var elem = document.getElementById(b);
                 var color = window.getComputedStyle(elem).getPropertyValue("color");
 
+                // Diese Abfrage dient dazu, bereits korrekt platzierte um somit grüne Zahlen nicht mehr zu ändern
                 if( ! (color === 'rgb(0, 128, 0)')) {
                     document.getElementById(b).style.color = "red";
                 }
@@ -135,7 +139,6 @@ H5P.QuickSort = (function ($) {
 
         function swap(items, leftIndex, rightIndex) {
             self.fData.push(0);
-
             self.data.push(leftIndex);
             self.data.push(rightIndex);
 
@@ -145,14 +148,14 @@ H5P.QuickSort = (function ($) {
         }
         
         function partition(items, li, re, piv) {
-
+            //Die Abfrage des Boolean b dient dazu, den ersten Partitionsaufruf nicht mitzuzählen
             if(self.b) {
                 self.fData.push(1);
-
                 self.data.push(li);
                 self.data.push(re);
             }
             self.b = true;
+
 
             var i = li; //left pointer
             var j = re - 1; //right pointer
@@ -178,18 +181,20 @@ H5P.QuickSort = (function ($) {
         }
 
         function quickSort(items, li, re) {
+            if(li < re) {
 
-           if(li < re) {
-                pivpos = Math.floor((li+re) / 2);
+                var pivpos = Math.floor((li+re) / 2);
                 pivpos = partition(items, li, re, pivpos);
 
-                quickSort(items, li, pivpos - 1);
-                quickSort(items, pivpos + 1, re);
-            }
+                quickSort(items, li, (pivpos - 1));
+                quickSort(items, (pivpos + 1), re);
+                
+            }        
+
+            
         }
 
         document.getElementById("start").onclick = function() {
-            console.log("liste: "+ self.options.toSort);
             quickSort(self.options.toSort, 0, self.options.toSort.length - 1);
             console.log(self.data);
             console.log(self.fData);
@@ -201,14 +206,14 @@ H5P.QuickSort = (function ($) {
         }
         
 
-
         /*
         Pruefe hier als mittels fData zunächst ob die aufgerufene Funktion die korrekte ist. 
         Dafür zunächst die Benutzereingaben entnehmen, dann die Parameter der Aufrufe aus der Liste.
         Wenn validiert wurde, dass diese Nutzereingaben mit der vom Algorithmus durchgeführten Schritte übereinstimmen (Zeile 126),
         wird mittels shift der Kopf der Liste entfernt, sodass die nächsten Elemente nachrücken können.
         Die Funktion für den Button ButtonPart arbeitet analog.  
-        */       
+        */    
+
         document.getElementById("ButtonSwap").onclick = function() {
             if(self.fData[0] == 0){
                 var swapFirstRef = self.data[0];
@@ -229,6 +234,7 @@ H5P.QuickSort = (function ($) {
                     self.toDisplay[swapSecRef] = temp;
 
                     $listSelector = $("#UnLi").empty();
+
                     $.each(self.toDisplay, function(index, number) {
                         var new_html = number;
                         $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html(new_html+"    "));
@@ -309,12 +315,10 @@ H5P.QuickSort = (function ($) {
             } else {
                 console.log("Falsche Methode");
             }
-        }        
+        } 
+        
     };
 
   }; 
   return C;
 })(H5P.jQuery);
-
-
-
