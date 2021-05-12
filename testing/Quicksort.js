@@ -3,6 +3,7 @@ TO-DO:
 #anzeige für das aktuelle pivot
 #wenn beide auf einer zahl stehen, macht der erste der weggeht, diese wieder schwarz
 #mehrere aufgaben auf einer Seite
+#feedback für korrekte / inkorrekte Eingabe
 */ 
 
 var H5P = H5P || {};
@@ -22,20 +23,27 @@ H5P.QuickSort = (function ($) {
     //diese Variablen dienen dazu, die aktuelle Teilliste jederzeit abfragen zu können
     this.currentBegin = 0;
     this.currentEnd = this.options.toSort.length - 1;
+
+    /*
+    Das Array sortet wird durch den Quick-Sort Algorithmus gefüllt
+    Das Array sortetTemp dient dazu, den Kopf der Liste sortet nach und nach zu entnehmen und zu speichern
+    */
     this.sortet = [];
     this.sortetTemp = [];
 
-    //Wenn das Array mehr als die zulässigen 10 Positionen enthält, wird dieses gekürzt
+    //Falls das Array mehr als die zulässigen 10 Positionen enthält, wird dieses gekürzt
     if(this.options.toSort.length > 10) {
         this.options.toSort = this.options.toSort.slice(0,10);
     }
     
     //Dieses Attribut dient zur späteren Visualisierung der einzelnen Schritte nach den Eingaben des Users
     this.toDisplay = JSON.parse(JSON.stringify(this.options.toSort));
+
     //In diesem Array werden die Parameter der Aufrufe swap und partition gespeichert
     this.data = [];
     //Dieses Array dient dazu, die Parameter der Liste data entweder der Funktion swap oder partition zuzuordnen
     this.fData = [];
+    //Dieser bool sorgt dafür, das der erste Partitionierungsaufruf nicht vom Benutzer eingegeben werden muss 
     this.b = false;
 
     self.attach = function ($container) {
@@ -44,20 +52,30 @@ H5P.QuickSort = (function ($) {
         // container.  Allows for styling later.
         $container.addClass("QuickSort");
     
-        //$container.append('<div class="DummyList" id="list">' + this.toDisplay + '</div>');
-
-
         $container.append('<ul style="list-style-type:none;" id="UnLi"> </ul>');
-        $listSelector = $("#UnLi");
 
-        $.each(this.toDisplay, function(index, number) {
-            var new_html = number;
-            $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html(new_html+"    "));
+        function showList() {
+            $.each(self.toDisplay, function(index, number) {
+                var new_html = number;
+                $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html(new_html+"    "));
+                
+                //Diese Abfrage dient dazu, nur die aktuelle Teilliste fett darzustellen
+                if(index < self.currentBegin || index > self.currentEnd ) {
+                    console.log(index);
+                    $('#'+index).css("font-weight","normal");
+                }
 
-            $('#'+index).mouseover(function() {
-                $('#IndexLabelInput').empty().append(index);
+                $('#'+index).mouseover(function() {
+                    $('#IndexLabelInput').empty().append(index);
+                });
             });
-        });
+            //Mithilfe dieser Schleife, werden die bereits am korrekten Index stehenden Zahlen grün eingefärbt
+            for(i = 0; i < self.sortetTemp.length; i++) {
+                $('#'+self.sortetTemp[i]).css("color","green");
+            }
+        }
+
+        showList();
 
         $container.append('<button id="ButtonSwap" class="inputSwap" type="button" id="swapBtn">Swap</button>');
         $container.append('<label id="IndexLabel" for="partition">Index: </label> ');
@@ -71,71 +89,52 @@ H5P.QuickSort = (function ($) {
     
         $container.append('<button id="ButtonPart" class="inputPart" type="button" id="partBtn">Partitioniere</button>');
         document.getElementById("ButtonPart").disabled = true;
-        /*$container.append('<label id="InputPartLeftBracket" class="inputPart" for="partition">(</label> ');
-        $container.append('<input id="InputPartFirst" class="inputPart" type="text"/>');
-        $container.append('<label id="InputPartComma" class="inputPart" for="partition">,</label> ');
-        $container.append('<input id="InputPartSecond" class="inputPart" type="text"/>'); 
-        $container.append('<label id="InputPartRightBracket" class="inputPart" for="partition">)</label> ');*/
+
     
-        $container.append('<button id="start"> Start </button>');
+        $container.append('<button id="start"> Start </button>')
+
+        document.getElementById("start").onclick = function() {
+
+            quickSort(self.options.toSort, 0, self.options.toSort.length - 1);
+            console.log(self.data);
+            console.log(self.fData);
+            console.log("liste: "+ self.options.toSort);
+
+            document.getElementById("ButtonSwap").disabled = false;
+            document.getElementById("ButtonPart").disabled = false;
+            document.getElementById("start").disabled = true;
+        }
 
         $container.append('<label id="VerifiedInputs"> </label>');
 
-        /**
-         * Die Eingaben aus den Inputfeldern entnehmen und die Liste UnLi an den entsprechenden Index einfärben
-         * Die Temp Variablen dienen zu Prüfung, ob bereits vorher eine Zahl rot gesetzt wurde
-         * Die Variablen elem und color dienen der Prüfung, ob das Element aktuelle grün ist, da die Farbe in dem Fall nicht mehr geändert werden soll    
-         */
-
         inputswapfirstBool = false;
         document.getElementById("InputSwapFirst").onchange = function() {
-            if(inputswapfirstBool == true) {
-                var elem = document.getElementById(tempa);
-                var color = window.getComputedStyle(elem).getPropertyValue("color");
-    
-                if(! (color === 'rgb(0, 128, 0)')) {
-                    document.getElementById(tempa).style.color = "black";
-                }
-            }
-
-            var a = document.getElementById("InputSwapFirst").value;
-            if(a  < self.options.toSort.length) {
-                inputswapfirstBool = true;
-                tempa = a;
-                var elem = document.getElementById(a);
-                var color = window.getComputedStyle(elem).getPropertyValue("color");
-
-                if( ! (color === 'rgb(0, 128, 0)')) {
-                    document.getElementById(a).style.color = "red";
-                }
-            }
+            markSelectedRed("InputSwapFirst"); 
         }
 
         inputswapsecondBool = false;
-        document.getElementById("InputSwapSecond").onchange = function() {           
-            if(inputswapsecondBool == true) {
+        document.getElementById("InputSwapSecond").onchange = function() { 
+            markSelectedRed("InputSwapSecond"); 
+        }      
+        
+        function markSelectedRed(button) {
+            var b = document.getElementById(button).value;
 
-                var elem = document.getElementById(tempb);
-                var color = window.getComputedStyle(elem).getPropertyValue("color");
-
-                if(! (color === 'rgb(0, 128, 0)')) {
-                    document.getElementById(tempb).style.color = "black";
-                }
-            }
-
-            var b = document.getElementById("InputSwapSecond").value;
             if(b  < self.options.toSort.length) {
                 inputswapsecondBool = true;
                 tempb = b;
                 var elem = document.getElementById(b);
                 var color = window.getComputedStyle(elem).getPropertyValue("color");
 
-                // Diese Abfrage dient dazu, bereits korrekt platzierte um somit grüne Zahlen nicht mehr zu ändern
-                if( ! (color === 'rgb(0, 128, 0)')) {
+                if( !(checkIfNotGreen(color))) {
                     document.getElementById(b).style.color = "red";
                 }
             }
-        }            
+        }
+
+        function checkIfNotGreen(color) {
+            return (color === 'rgb(0, 128, 0)');
+        }
 
         function swap(items, leftIndex, rightIndex) {
             self.fData.push(0);
@@ -187,24 +186,9 @@ H5P.QuickSort = (function ($) {
                 pivpos = partition(items, li, re, pivpos);
 
                 quickSort(items, li, (pivpos - 1));
-                quickSort(items, (pivpos + 1), re);
-                
-            }        
-
-            
-        }
-
-        document.getElementById("start").onclick = function() {
-            quickSort(self.options.toSort, 0, self.options.toSort.length - 1);
-            console.log(self.data);
-            console.log(self.fData);
-            console.log("liste: "+ self.options.toSort);
-
-            document.getElementById("ButtonSwap").disabled = false;
-            document.getElementById("ButtonPart").disabled = false;
-            document.getElementById("start").disabled = true;
-        }
-        
+                quickSort(items, (pivpos + 1), re);  
+            }                
+        }        
 
         /*
         Pruefe hier als mittels fData zunächst ob die aufgerufene Funktion die korrekte ist. 
@@ -228,30 +212,8 @@ H5P.QuickSort = (function ($) {
                     self.fData.shift();
 
                     console.log("richtig!");
-                    temp = self.toDisplay[swapFirstRef];
-                
-                    self.toDisplay[swapFirstRef] = self.toDisplay[swapSecRef];
-                    self.toDisplay[swapSecRef] = temp;
 
-                    $listSelector = $("#UnLi").empty();
-
-                    $.each(self.toDisplay, function(index, number) {
-                        var new_html = number;
-                        $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html(new_html+"    "));
-                        //Diese Abfrage dient dazu, nur die aktuelle Teilliste fett anzuzeigen
-                        if(index < self.currentBegin || index > self.currentEnd ) {
-                            console.log(index);
-                            $('#'+index).css("font-weight","normal");
-                        }
-                        $('#'+index).mouseover(function() {
-                            $('#IndexLabelInput').empty().append(index);
-                        });
-                    });
-
-                    for(i = 0; i < self.sortetTemp.length; i++) {
-                        $('#'+self.sortetTemp[i]).css("color","green");
-                    }
-
+                    showList();
                     var mydiv = document.getElementById("VerifiedInputs");
                     mydiv.appendChild(document.createTextNode("Swap("+swapFirstRef+","+swapSecRef+")   "));
 
@@ -272,37 +234,22 @@ H5P.QuickSort = (function ($) {
                 var partFirstIn = document.getElementById("InputSwapFirst").value;
                 var partpSecIn = document.getElementById("InputSwapSecond").value;
 
-                if( ( partFirstIn == partFirstRef) && (partpSecIn == partSecRef )) {
+                if( (partFirstIn == partFirstRef) && (partpSecIn == partSecRef) ) {
+
                     self.data.shift();
                     self.data.shift();
                     self.fData.shift();
+
                     self.currentBegin = partFirstRef;
                     self.currentEnd = partSecRef;
 
                     console.log("richtig!");
 
                     $listSelector = $("#UnLi").empty();
-
-                    $.each(self.toDisplay, function(index, number) {
-                        var new_html = number;
-                        $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html(new_html+"    "));
-                        //Diese Abfrage dient dazu, nur die aktuelle Teilliste fett anzuzeigen
-                        if(index < self.currentBegin || index > self.currentEnd ) {
-                            console.log(index);
-                            $('#'+index).css("font-weight","normal");
-                        }
-
-                        $('#'+index).mouseover(function() {
-                            $('#IndexLabelInput').empty().append(index);
-                        });
-                    });
-                    
                     self.sortetTemp.push(self.sortet[0]);
-                    self.sortet.shift();
-                    for(i = 0; i < self.sortetTemp.length; i++) {
-                        $('#'+self.sortetTemp[i]).css("color","green");
-                    }
 
+                    showList();
+                    self.sortet.shift();
 
                     var mydiv = document.getElementById("VerifiedInputs");
                     mydiv.appendChild(document.createTextNode("Partitioniere("+partFirstRef+","+partSecRef+")"  ));
@@ -315,10 +262,10 @@ H5P.QuickSort = (function ($) {
             } else {
                 console.log("Falsche Methode");
             }
-        } 
-        
+        }   
     };
-
   }; 
+
   return C;
+
 })(H5P.jQuery);
