@@ -4,6 +4,7 @@ TO-DO:
 # ende einbauen (mit einer Übersicht aller korrekten Eingaben)
 # Option einbauen um den Pseudo-Code als User-Hilfe einzublenden
 # mehrere aufgaben auf einer Seite (evtl drupal problem, erst auf moodle testen)
+- Grünfärbung der korrekten Elemente (dafür anschauen, wie der alg am ende abschließt)
 */ 
 
 var H5P = H5P || {};
@@ -43,14 +44,16 @@ H5P.QuickSort = (function ($) {
     this.data = [];
     //Dieses Array dient dazu, die Parameter der Liste data entweder der Funktion swap oder partition zuzuordnen
     this.fData = [];
-
     this.pivotList = [];
+
+    //diese variable wird genutzt, um die Rundungsfehler bei der Anzeige in der Methode update() auszugleichen, sodass diese am Ende bei 100% steht
+    this.numberOfCalls;
 
     //Dieser bool sorgt dafür, das der erste Partitionierungsaufruf nicht vom Benutzer eingegeben werden muss 
     this.firstPartition = true;
 
-    this.leftInput = -1;
-    this.rightInput = -1;
+    this.leftInput = 0;
+    this.rightInput = 0;
 
     this.stepSize;
 
@@ -87,34 +90,46 @@ H5P.QuickSort = (function ($) {
         }
         showList();
 
-        $container.append('<button id="ButtonSwap" class="inputSwap" type="button" id="swapBtn">Swap</button>');
         $container.append('<label id="IndexLabel" for="partition">Index: </label> ');
         $container.append('<label id="IndexLabelInput" for="partition"></label> ');
-        
+
         $container.append('<label id= "PivotLabel" for="partition">Pivot:  </label>');
         $container.append('<label id= "PivotLabelInput" for="partition"></label> ');
 
+        $container.append('<div class="btn-group"><button id="ButtonPart" class="button" type="button">Partitioniere</button> <button id="ButtonSwap" class="button" type="button">Swap</button></div>');
+
+        document.getElementById("ButtonPart").disabled = true;     
         document.getElementById("ButtonSwap").disabled = true;
+
         $container.append('<label id="InputSwapLeftBracket" class="inputSwap" for="swap">(</label> ');
         $container.append('<input id="InputSwapFirst" type="text" class="inputSwap" />');
+        document.getElementById("InputSwapFirst").disabled = true;
+
         $container.append('<label id="InputSwapComma" class="inputSwap" for="partition">,</label> ');
         $container.append('<input id="InputSwapSecond" class="inputSwap" type="text"/>'); 
+        document.getElementById("InputSwapSecond").disabled = true;
+
         $container.append('<label id="InputSwapRightBracket" class="inputSwap" for="partition">)</label> ');
     
-        $container.append('<button id="ButtonPart" class="inputPart" type="button" id="partBtn">Partitioniere</button>');
-    
-        $container.append('<button id="start"> Start </button>');
+
 
         $container.append('<div id="myProgress"><div id="myBar"></div></div>');
 
         width = 0;
+        cnt = 0;
         function update() {
+            cnt++;
             var element = document.getElementById("myBar");   
             width += parseInt(self.stepSize);
+            //Wenn diese Bedingung zutrifft, ist der Durchlauf erreicht und die Rundungsfehler müssen ausgeglichen werden 
+            if(cnt == self.numberOfCalls) {
+                width = 100;
+            }
             element.style.width = width + '%'; 
             element.innerHTML = width + "%";
         }
 
+        $container.append('<button id="start"> Start </button>');
         document.getElementById("start").onclick = function() {
 
             quickSort(self.options.toSort, 0, self.options.toSort.length - 1);
@@ -124,10 +139,16 @@ H5P.QuickSort = (function ($) {
 
             document.getElementById("ButtonSwap").disabled = false;
             document.getElementById("ButtonPart").disabled = false;
+
+            document.getElementById("InputSwapFirst").disabled = false;
+            document.getElementById("InputSwapSecond").disabled = false;
+
+
             document.getElementById("start").disabled = true;
 
             $('#PivotLabelInput').empty().append(self.pivotList[0]);
             self.stepSize = 100 / self.fData.length;
+            self.numberOfCalls = self.fData.length;
         }
 
         $container.append('<label id="VerifiedInputs"> </label>');
@@ -137,38 +158,45 @@ H5P.QuickSort = (function ($) {
         */
         inputswapfirstBool = false;
         document.getElementById("InputSwapFirst").onchange = function() {
-            if( (self.leftInput  != - 1) && (self.leftInput != self.rightInput) ) {
+            if(document.getElementById("InputSwapFirst").value) {
+
+            if( (self.leftInput != self.rightInput)&& (! checkIfGreen(self.rightInput)) ) {
                 document.getElementById(self.leftInput).style.color = "black";
             }
             self.leftInput = markSelectedRed("InputSwapFirst"); 
         }
+        }
 
         inputswapsecondBool = false;
         document.getElementById("InputSwapSecond").onchange = function() { 
-            if( (self.rightInput  != - 1) && (self.rightInput != self.leftInput) ) {
-                document.getElementById(self.rightInput).style.color = "black";
-            }
-            self.rightInput = markSelectedRed("InputSwapSecond"); 
+            if(document.getElementById("InputSwapSecond").value) {
+                if( (self.rightInput != self.leftInput) && (! checkIfGreen(self.rightInput)) ) {
+                    document.getElementById(self.rightInput).style.color = "black";
+                }
+                self.rightInput = markSelectedRed("InputSwapSecond"); 
+        }
         }      
         
         function markSelectedRed(button) {
             var b = document.getElementById(button).value;
-
+        
             if(b  < self.options.toSort.length) {
                 inputswapsecondBool = true;
                 tempb = b;
-                var elem = document.getElementById(b);
-                var color = window.getComputedStyle(elem).getPropertyValue("color");
 
-                if( !(checkIfNotGreen(color))) {
+                if( !(checkIfGreen(b))) {
                     document.getElementById(b).style.color = "red";
                 }
             }
             return b;
         }
 
-        function checkIfNotGreen(color) {
-            return (color === 'rgb(0, 128, 0)');
+        function checkIfGreen(b) {
+
+            var elem = document.getElementById(b);
+            var color = window.getComputedStyle(elem).getPropertyValue("color");
+            return (color == 'rgb(0, 128, 0)');
+
         }
 
         function swap(items, leftIndex, rightIndex) {
@@ -236,7 +264,6 @@ H5P.QuickSort = (function ($) {
 
         document.getElementById("ButtonSwap").onclick = function() {
 
-
             if(self.fData[0] == 0){
                 var swapFirstRef = self.data[0];
                 var swapSecRef = self.data[1];
@@ -246,6 +273,7 @@ H5P.QuickSort = (function ($) {
 
                 $('#InputSwapFirst').val('');
                 $('#InputSwapSecond').val('');
+
                 
 
                 if( (swapFirstIn == swapFirstRef) && (swapSecIn == swapSecRef)) {
@@ -275,12 +303,9 @@ H5P.QuickSort = (function ($) {
             }
         }
 
-
-        
-        
         document.getElementById("ButtonPart").onclick = function() {
-            self.options.partsteps--;
             if(self.fData[0] == 1) {
+
                 var partFirstRef = self.data[0];
                 var partSecRef = self.data[1];
 
@@ -289,7 +314,6 @@ H5P.QuickSort = (function ($) {
 
                 $('#InputSwapFirst').val('');
                 $('#InputSwapSecond').val('');
-                
 
                 if( (partFirstIn == partFirstRef) && (partpSecIn == partSecRef) ) {
                     self.pivotList.shift();
@@ -301,19 +325,26 @@ H5P.QuickSort = (function ($) {
                     self.currentEnd = partSecRef;
 
                     console.log("richtig!");
+                    self.options.partsteps--;
                     update();
 
                     self.sortetTemp.push(self.sortet[0]);
+                    self.sortet.shift();
+
+
+
 
                     $listSelector = $("#UnLi").empty();
                     showList();
-                    self.sortet.shift();
 
                     var mydiv = document.getElementById("VerifiedInputs");
                     mydiv.appendChild(document.createTextNode("Partitioniere("+partFirstRef+","+partSecRef+")"  ));
                     
                     if(self.options.partsteps == 0) {
                         console.log("Alles richtig!");
+                    }
+                    if(self.pivotList.length == 0) {
+                        console.log("Fertig sortiert!")
                     }
                 } else {
                     console.log("Leider falsch");
@@ -325,6 +356,6 @@ H5P.QuickSort = (function ($) {
     };
   }; 
 
-  return C;
+    return C;
 
 })(H5P.jQuery);

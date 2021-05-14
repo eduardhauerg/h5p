@@ -8,8 +8,9 @@
  
  .QuickSort #UnLi{
      display: inline-block;
-     font-size: 22px;
+     font-size: 25px;
      font-weight: bold;
+     margin: auto;
 
  } 
 
@@ -54,9 +55,19 @@
     
   #myBar {
     width: 00%;
-    height: 30px;
+    height: 20px;
     background-color: #04AA6D;
     text-align: center; /* To center it horizontally (if you want) */
-    line-height: 30px; /* To center it vertically */
+    line-height: 20px; /* To center it vertically */
     color: white;
+  }
+
+  .btn-group .button {
+    color: black;
+    text-decoration: none;
+    text-align: center;
+    font-size: 15px;
+    height: 35px ;
+    width: 120px;
+    display: block;
   }
