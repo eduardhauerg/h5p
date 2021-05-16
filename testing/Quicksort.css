@@ -1,61 +1,50 @@
 .QuickSort {
-    width: 600px;
+    width: 650px;
     height: 450px;
     margin: 0 auto;
     border: 1px solid #ccc;
     box-shadow: 2px 2px 4px #ccc;
   }
- 
+
+.QuickSort #ul-div {
+    width:100%;
+    display: flex;
+    justify-content: center;
+    font-family: Arial, sans-serif;    
+}
+
  .QuickSort #UnLi{
+    transform: translate(-45px, 50px);
      display: inline-block;
      font-size: 25px;
-     font-weight: bold;
+     font-weight: 800;
      margin: auto;
-
+     color: rgba(46, 200, 138, 1);
  } 
 
 .QuickSort .inputSwap {
+    transform: translate(240px, 30px);
     display: inline-block;
+    width: 30px;
+    height: 30px;
+    font-size: larger;
+    padding:10px;
+    border-radius:10px;
+    padding:10px;
+    box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+
 }
 
-.QuickSort #InputSwap {
-    width: 50px;
-}
-.QuickSort #InputSwapFirst {
-    width: 15px;
-    height: 10px;
-}
-
-.QuickSort #InputSwapSecond {
-    width: 15px;
-    height: 10px;
-}
-
-.QuickSort .inputPart {
-    display: inline-block;
-}
-
-.QuickSort #InputPart {
-    width: 50px;
-}
-.QuickSort #InputPartFirst {
-    width: 15px;
-    height: 10px;
-}
-
-.QuickSort #InputPartSecond {
-    width: 15px;
-    height: 10px;
-}
 #myProgress {
-    width: 50%;
+    transform: translate(0px, 155px);
+    width: 75%;
     background-color: #D3D3D3;
     margin: auto;
   }
     
-  #myBar {
+  #myBar {        
     width: 00%;
-    height: 20px;
+    height: 25px;
     background-color: #04AA6D;
     text-align: center; /* To center it horizontally (if you want) */
     line-height: 20px; /* To center it vertically */
@@ -63,11 +52,30 @@
   }
 
   .btn-group .button {
+    transform: translate(50px, 95px);
     color: black;
     text-decoration: none;
     text-align: center;
     font-size: 15px;
-    height: 35px ;
-    width: 120px;
+    height: 30px ;
+    width: 115px;
     display: block;
+  }
+
+  .QuickSort .index-group {
+    transform: translate(20px, 50px);
+        display: flex;
+  } 
+  .QuickSort .pivot-group {
+    transform: translate(20px, 50px);
+      display: flex;
+  }
+
+  .QuickSort #start {
+    transform: translate(270px, 180px);
+  }
+
+  .QuickSort #VerifiedInputs{
+    transform: translate(20px, 20px);
+
   }
