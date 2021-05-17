@@ -1,6 +1,6 @@
 .QuickSort {
     width: 650px;
-    height: 450px;
+    height: 475px;
     margin: 0 auto;
     border: 1px solid #ccc;
     box-shadow: 2px 2px 4px #ccc;
@@ -19,20 +19,23 @@
      font-size: 25px;
      font-weight: 800;
      margin: auto;
-     color: rgba(46, 200, 138, 1);
+     color: black;
  } 
 
 .QuickSort .inputSwap {
-    transform: translate(240px, 30px);
+    transform: translate(255px, 30px);
     display: inline-block;
     width: 30px;
     height: 30px;
     font-size: larger;
     padding:10px;
+    border: 2px solid #7892c2;
     border-radius:10px;
-    padding:10px;
-    box-shadow:0 0 15px 4px rgba(0,0,0,0.06);
+    text-align: center;
+}
 
+.QuickSort #InputSwapSecond {
+  transform: translate(260px, 30px);
 }
 
 #myProgress {
@@ -40,35 +43,47 @@
     width: 75%;
     background-color: #D3D3D3;
     margin: auto;
+    border: 2px solid #7892c2;
+    border-radius:10px;
   }
     
   #myBar {        
     width: 00%;
-    height: 25px;
+    height: 22px;
     background-color: #04AA6D;
     text-align: center; /* To center it horizontally (if you want) */
     line-height: 20px; /* To center it vertically */
     color: white;
+    border-radius:10px;
   }
 
   .btn-group .button {
-    transform: translate(50px, 95px);
     color: black;
     text-decoration: none;
     text-align: center;
     font-size: 15px;
     height: 30px ;
-    width: 115px;
+    width: 120px;
     display: block;
+    transform: translate(450px, 85px);
+    color:#ffffff;
+    background:linear-gradient(to bottom, #7892c2 5%, #476e9e 100%);
+    border-radius:28px;
+    border:1px black;
+    cursor:pointer;
+  }
+
+  .QuickSort #ButtonPart {
+    transform: translate(450px, 90px);
   }
 
   .QuickSort .index-group {
-    transform: translate(20px, 50px);
-        display: flex;
+    transform: translate(80px, 135px);
+    display: flex;
   } 
   .QuickSort .pivot-group {
-    transform: translate(20px, 50px);
-      display: flex;
+    transform: translate(80px, 135px);
+    display: flex;
   }
 
   .QuickSort #start {
@@ -77,5 +92,80 @@
 
   .QuickSort #VerifiedInputs{
     transform: translate(20px, 20px);
+  }
+
+  .QuickSort #PivotLabelInput{
+    color: #7892c2;
+  }
+  .QuickSort #IndexLabelInput{
+    color: #7892c2;
+  }
+  *, *::after, *::before {
+    box-sizing: border-box;
+  }
+  
+  .modal {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(0);
+    transition: 200ms ease-in-out;
+    border: 1px solid black;
+    border-radius: 10px;
+    z-index: 10;
+    background-color: white;
+    width: 500px;
+    max-width: 80%;
+  }
+  
+  .modal.active {
+    transform: translate(-50%, -50%) scale(1);
+  }
+  
+  .modal-header {
+    padding: 10px 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid black;
+  }
+  
+  .modal-header .title {
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .modal-header .close-button {
+    cursor: pointer;
+    border: none;
+    outline: none;
+    background: none;
+    font-size: 1.25rem;
+    font-weight: bold;
+  }
+  
+  .modal-body {
+    padding: 10px 15px;
+  }
+  
+  #overlay {
+    position: fixed;
+    opacity: 0;
+    transition: 200ms ease-in-out;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, .5);
+    pointer-events: none;
+  }
+  
+  #overlay.active {
+    opacity: 1;
+    pointer-events: all;
+  }
+
+  .QuickSort #modalbutton {
+    transform: translate(30px, 220px);
 
   }

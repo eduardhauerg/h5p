@@ -1,6 +1,7 @@
 /*
 
 TO-DO:
+# Hilfeseite als Pop-Up durch Button-Klick
 # ende einbauen (mit einer Übersicht aller korrekten Eingaben)
 # Option einbauen um den Pseudo-Code als User-Hilfe einzublenden
 # mehrere aufgaben auf einer Seite (evtl drupal problem, erst auf moodle testen)
@@ -66,26 +67,24 @@ H5P.QuickSort = (function ($) {
 
         function showList() {
 
-            $('#PivotLabelInput').empty().append(self.pivotList[0]);
- 
+            $('#PivotLabelInput').empty().append(self.pivotList[0]);            
+            fencePostIndex = 0;
             $.each(self.toDisplay, function(index, number) {
                 var new_html = number;
-                $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html(new_html+"    "));
-                
+
+                $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html(" | "+new_html));
+                fencePostIndex++;
                 //Diese Abfrage dient dazu, nur die aktuelle Teilliste fett darzustellen
                 if(index < self.currentBegin || index > self.currentEnd ) {
                     console.log(index);
                     $('#'+index).css("font-weight","100");
                 }
-
                 $('#'+index).mouseover(function() {
                     $('#IndexLabelInput').empty().append(index);
                 });
             });
-            //Mithilfe dieser Schleife, werden die bereits am korrekten Index stehenden Zahlen grün eingefärbt
-            /*for(i = 0; i < self.sortetTemp.length; i++) {
-                $('#'+self.sortetTemp[i]).css("color","green");
-            }*/
+            $('#UnLi').append($('<class="horizontal" id="'+fencePostIndex+'"li></li>').html(" | "));
+    
         }
         showList();
 
@@ -106,6 +105,55 @@ H5P.QuickSort = (function ($) {
 
         $container.append('<div id="myProgress"><div id="myBar"></div></div>');
 
+        $container.append('<button id="modalbutton"data-modal-target="#modal">Hilfe</button><div class="modal" id="modal"><div class="modal-header"><div class="title">Anleitung</div><button data-close-button class="close-button">&times;</button></div><div class="modal-body">uis i</div></div><div id="overlay"></div>');
+
+        $container.append('<div id="overlay"> </div>');
+
+        const openModalButtons = document.querySelectorAll('[data-modal-target]');
+        const closeModalButtons = document.querySelectorAll('[data-modal-close]');
+
+        const overlay = document.getElementById('overlay');
+
+        overlay.addEventListener('click', () => {
+            const modals = document.querySelectorAll('.modal.active')
+            modals.forEach(modals => {
+                closeModal(modal);
+            })
+        })
+
+        openModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const modal = document.querySelector(button.dataset.modalTarget)
+                openModal(modal);
+            })
+        })
+
+        closeModalButtons.forEach(button => {
+            button.addEventListener('click', () => {
+                const modal = button.closest('.modal')
+                closeModal(modal);
+            })
+        })
+
+        function openModal(modal) {
+            if(modal == null) {
+                return;
+            }
+            modal.classList.add('active');
+            overlay.classList.add('active');
+        }
+
+        function closeModal(modal) {
+            if(modal == null) {
+                return;
+            }
+            modal.classList.remove('active');
+            overlay.classList.remove('active');
+        }
+
+
+
+
         width = 0;
         cnt = 0;
         function update() {
@@ -120,8 +168,7 @@ H5P.QuickSort = (function ($) {
             element.innerHTML = width + "%";
         }
 
-        $container.append('<button id="start"> Start </button>');
-        document.getElementById("start").onclick = function() {
+        $(document).ready( function() {
 
             quickSort(self.options.toSort, 0, self.options.toSort.length - 1);
             console.log(self.data);
@@ -135,52 +182,58 @@ H5P.QuickSort = (function ($) {
             document.getElementById("InputSwapSecond").disabled = false;
 
 
-            document.getElementById("start").disabled = true;
-
             $('#PivotLabelInput').empty().append(self.pivotList[0]);
             self.stepSize = 100 / self.fData.length;
             self.numberOfCalls = self.fData.length;
-        }
+        })
 
         $container.append('<label id="VerifiedInputs"> </label>');
 
-        /*
-        die if abfrage dient dazu, bei gleicher indizierung die rote Markierung beizubehalten
-        */
+        function getFirstInput() {
+            val = document.getElementById("InputSwapFirst").value;
+            if(val) {
+                if( (self.currentBegin >= val) || (val <= self.currentEnd) ) {
+                    return val;
+                }
+            }
+            return 0;
+        }
+
+        function getSecondInput() {
+            val = document.getElementById("InputSwapSecond").value;
+            if(val) {
+                if( (self.currentBegin >= val) || (val <= self.currentEnd) ) {
+                    return val;
+                }
+            }
+            return 0;
+        }
+
         inputswapfirstBool = false;
         document.getElementById("InputSwapFirst").onchange = function() {
-            if(document.getElementById("InputSwapFirst").value) {
-
-            /*if( (self.leftInput != self.rightInput)&& (! checkIfGreen(self.rightInput)) ) {
-                document.getElementById(self.leftInput).style.color = "black";
-            }*/
+           input = getFirstInput();
+                
             if( (self.leftInput != self.rightInput) ) {
-                document.getElementById(self.leftInput).style.color = "rgba(46, 200, 138, 1)" ;
+                document.getElementById(self.leftInput).style.color = "black" ;
             }
-            self.leftInput = markSelected("InputSwapFirst"); 
-        }
+            self.leftInput = markSelected(input); 
         }
 
         inputswapsecondBool = false;
         document.getElementById("InputSwapSecond").onchange = function() { 
-            if(document.getElementById("InputSwapSecond").value) {
-                if( (self.rightInput != self.leftInput) ) {
-                    document.getElementById(self.rightInput).style.color = "rgba(46, 200, 138, 1)";
-                }
-                self.rightInput = markSelected("InputSwapSecond"); 
-        }
+            
+            input = getSecondInput();
+
+            if( (self.rightInput != self.leftInput) ) {
+                document.getElementById(self.rightInput).style.color = "black";
+            }
+            self.rightInput = markSelected(input); 
         }      
         
-        function markSelected(button) {
-            var b = document.getElementById(button).value;
-        
-            if(b  < self.options.toSort.length) {
-                inputswapsecondBool = true;
-                tempb = b;
+        function markSelected(b) {
 
-                document.getElementById(b).style.color = "black";
-
-            }
+            document.getElementById(b).style.color = "#7892c2";
+            
             return b;
         }
 
