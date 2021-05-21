@@ -1,7 +1,6 @@
 /*
 
 TO-DO:
-# Hilfeseite als Pop-Up durch Button-Klick
 # ende einbauen (mit einer Übersicht aller korrekten Eingaben)
 # Option einbauen um den Pseudo-Code als User-Hilfe einzublenden
 # mehrere aufgaben auf einer Seite (evtl drupal problem, erst auf moodle testen)
@@ -36,6 +35,14 @@ H5P.QuickSort = (function ($) {
     if(this.options.toSort.length > 10) {
         this.options.toSort = this.options.toSort.slice(0,10);
     }
+    for(i = 0; i < this.options.toSort.length; i++) {
+        if(this.options.toSort[i] > 99) {
+            this.options.toSort[i] = 1;
+        }
+        if(this.options.toSort[i] < -99) {
+            this.options.toSort[i] = -1;
+        }
+    }
     
     //Dieses Attribut dient zur späteren Visualisierung der einzelnen Schritte nach den Eingaben des Users
     this.toDisplay = JSON.parse(JSON.stringify(this.options.toSort));
@@ -68,12 +75,10 @@ H5P.QuickSort = (function ($) {
         function showList() {
 
             $('#PivotLabelInput').empty().append(self.pivotList[0]);            
-            fencePostIndex = 0;
             $.each(self.toDisplay, function(index, number) {
                 var new_html = number;
 
-                $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html(" | "+new_html));
-                fencePostIndex++;
+                $('#UnLi').append($('<class="horizontal" id="'+index+'"li></li>').html("&nbsp;&nbsp;"+new_html));
                 //Diese Abfrage dient dazu, nur die aktuelle Teilliste fett darzustellen
                 if(index < self.currentBegin || index > self.currentEnd ) {
                     console.log(index);
@@ -83,7 +88,6 @@ H5P.QuickSort = (function ($) {
                     $('#IndexLabelInput').empty().append(index);
                 });
             });
-            $('#UnLi').append($('<class="horizontal" id="'+fencePostIndex+'"li></li>').html(" | "));
     
         }
         showList();
@@ -105,7 +109,8 @@ H5P.QuickSort = (function ($) {
 
         $container.append('<div id="myProgress"><div id="myBar"></div></div>');
 
-        $container.append('<button id="modalbutton"data-modal-target="#modal">Hilfe</button><div class="modal" id="modal"><div class="modal-header"><div class="title">Anleitung</div><button data-close-button class="close-button">&times;</button></div><div class="modal-body">uis i</div></div><div id="overlay"></div>');
+        $container.append('<button id="modalbutton"data-modal-target="#modal">Hilfe</button><div class="modal" id="modal"><div class="modal-header"><div class="title">Anleitung</div><button data-close-button class="close-button">&times;</button></div><div id="anleitung" class="modal-body">Die oben dargestellte Liste soll mithilfe des Quick-Sort Algorithmus aus der Vorlesung sortiert werden.<p> Dazu stehen die Methoden "Swap" und "Partitioniere" zur Verfügung.<br> Aufgabe ist es, die korrekte Methode mit den korrekten Parametern aufzurufen. Die beiden Parameter der Liste und des aktuellen Pivot Elements sind impliziet - es müssen nur die beiden Indizierungen angegeben werden. Dazu die beiden indizes in die Input-Felder eingeben und die entsprechende Methode auswählen.<br><br> Beim Hovern über der Liste wird der aktuelle Index eingeblendet, darunter ist der Wert des aktuellen Pivot Elements dargestellt.Bei korrekter Eingabe bewegt sich der unten eingeblendete Fortschrittsbalken. Inkorrekte Eingaben werden nicht als Fehlversuche gezählt. </div></div><div id="overlay"></div>');
+        //document.getElementById("anleitung") += "add";
 
         $container.append('<div id="overlay"> </div>');
 

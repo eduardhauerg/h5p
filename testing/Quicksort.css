@@ -10,7 +10,8 @@
     width:100%;
     display: flex;
     justify-content: center;
-    font-family: Arial, sans-serif;    
+    font-family: Arial, sans-serif;  
+  
 }
 
  .QuickSort #UnLi{
@@ -19,14 +20,15 @@
      font-size: 25px;
      font-weight: 800;
      margin: auto;
-     color: black;
- } 
+     color: black;   
+    } 
+
 
 .QuickSort .inputSwap {
     transform: translate(255px, 30px);
     display: inline-block;
-    width: 30px;
-    height: 30px;
+    width: 50px;
+    height: 50px;
     font-size: larger;
     padding:10px;
     border: 2px solid #7892c2;
@@ -166,6 +168,6 @@
   }
 
   .QuickSort #modalbutton {
-    transform: translate(30px, 220px);
+    transform: translate(30px, 200px);
 
   }

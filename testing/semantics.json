@@ -3,15 +3,9 @@
       "label": "Quick-Sort", 
       "name": "toSort", 
       "type": "text", 
-      "default": "4,2,1,5", 
-      "description": "Die zu sortierende Liste hier eingeben. Die Zahlen bitte durch Komma getrennt eingeben. Maximal 10 Positionen. ",
+      "default": "26,50,7,24,40,47,38,32,11,14", 
+      "description": "Die zu sortierende Liste hier eingeben. Die Zahlen bitte durch Kommata getrennt eingeben. Maximal 10 Positionen. Bitte nur maximal zweistellige Zahlen. ",
       "maxLength":"100"
-    },
-
-    { 
-      "label": "Partitionen", 
-      "name": "partsteps", 
-      "type": "number", 
-      "default": 0
     }
+
   ]
