@@ -20,7 +20,16 @@
   font-size: 26px;
   font-weight: 800;
   color: black;
+  margin:0;
+  padding:0;
+  display: flex;
+  justify-content: space-between;
   }
+.QuickSort #UnLi li {
+  padding: .31em;
+ /* border: 1px solid #7892c2;
+  line-height: 1;*/
+}
 
 .QuickSort #labelsinputbuttons {
     display: flex;
@@ -33,18 +42,26 @@
     display: flex;
     min-width: 100px;
     flex-direction: column;
+    font-size: large;
 }
 
 .QuickSort .index-group {
     display: flex;
     flex-direction: row;
-    margin-bottom: 21px;
+    margin-bottom: 9px;
     margin-top: 7px;
 } 
 
 .QuickSort .pivot-group {
     display: flex;
     flex-direction: row;
+}
+
+.QuickSort #PivotLabelInput{
+  color: #7892c2;
+}
+.QuickSort #IndexLabelInput{
+  color: #7892c2;
 }
 
 .QuickSort #inputdiv {
@@ -85,18 +102,13 @@
   margin: 5px;
 }
 
-.QuickSort #PivotLabelInput{
-  color: #7892c2;
-}
-.QuickSort #IndexLabelInput{
-  color: #7892c2;
-}
 
 .QuickSort #lastinputdiv {
   display: flex;
   margin: 55px;
   margin-top: 40px;
   min-height: 50px; 
+  /*font-size: large;*/
 }
 
 .QuickSort .lastInput {

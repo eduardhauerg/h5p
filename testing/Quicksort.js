@@ -1,5 +1,5 @@
 /**
- * liste zentrieren
+ * Feedback bei falscher Eingabe: Ränder der Input Fenster rot für 1 sek
  */
 
 var H5P = H5P || {};
@@ -73,7 +73,7 @@ H5P.QuickSort = (function ($) {
                 $.each(self.toDisplay, function (index, number) {
                     var new_html = number;
 
-                    $('#UnLi').append($('<class="horizontal" id="' + index + '"li></li>').html("&nbsp;&nbsp;" + new_html));
+                    $('#UnLi').append($('<li class="horizontal" id="' + index + '"></li>').html(new_html));
                     //Diese Abfrage dient dazu, nur die aktuelle Teilliste fett darzustellen
                     if (index < self.currentBegin || index > self.currentEnd) {
                         console.log(index);
@@ -145,7 +145,7 @@ H5P.QuickSort = (function ($) {
             });
 
             $container.append('<div id="detailsdiv">    <details id="instruction"> <summary>Hilfe</summary <p> Die Liste soll mittels Quick-Sort sortiert werden.' +
-                ' Dazu müssen die korrekten Indizes eingegeben, und die entsprechende Methode mithilfe der Buttons ausgeführt werden. Das Pivot wird automatisch berechnet und eingeblendet.' +
+                ' Dazu müssen die korrekten Indizes eingegeben, und die entsprechende Methode mithilfe der Buttons ausgeführt werden. Das aktuelle Pivot wird automatisch berechnet und eingeblendet.' +
                 ' Bei richtiger Eingabe bewegt sich der Fortschrittsbalken. Zur Lösung ist es notwendig, <b>exakt</b> den Algorithmus aus der Vorlesung anzuwenden.</p></details>   </div>');
 
             function getFirstInput() {
@@ -278,8 +278,7 @@ H5P.QuickSort = (function ($) {
                         self.data.shift();
                         self.fData.shift();
 
-                        console.log("richtig!");
-
+                        userFeedback(true);
                         update();
 
                         temp = self.toDisplay[swapFirstRef];
@@ -291,16 +290,15 @@ H5P.QuickSort = (function ($) {
 
                         var mydiv = document.getElementById("VerifiedInputs");
                         mydiv.innerHTML = "Swap(" + swapFirstRef + "," + swapSecRef + ")";
-                        //mydiv.appendChild(document.createTextNode("Swap("+swapFirstRef+","+swapSecRef+")"));
-
 
                     } else {
-                        console.log("Leider falsch");
+                        userFeedback(false);
                     }
                 } else {
-                    console.log("Falsche Methode");
+                    userFeedback(false);
                 }
             }
+
 
             document.getElementById("ButtonPart").onclick = function () {
                 if (self.fData[0] == 1) {
@@ -327,8 +325,8 @@ H5P.QuickSort = (function ($) {
 
                         self.currentBegin = partFirstRef;
                         self.currentEnd = partSecRef;
-
-                        console.log("richtig!");
+                        
+                        userFeedback(true);
                         update();
 
                         self.sortetTemp.push(self.sortet[0]);
@@ -339,18 +337,48 @@ H5P.QuickSort = (function ($) {
 
                         var mydiv = document.getElementById("VerifiedInputs");
                         mydiv.innerHTML = "Part(" + partFirstRef + "," + partSecRef + ")";
-                        //mydiv.appendChild(document.createTextNode("Part("+partFirstRef+","+partSecRef+")"  ));
 
-                        if (self.pivotList.length == 0) {
-                            console.log("Fertig sortiert!")
-                        }
                     } else {
-                        console.log("Leider falsch");
+                        userFeedback(false);
                     }
                 } else {
-                    console.log("Falsche Methode");
+                    userFeedback(false);
                 }
             }
+            /**
+             * 
+             * Diese Methode dient zum visuellen Benutzer Feedback nach der Eingabe.
+             * Bei Eingabe eines Ergebnis, blinken die Ränder der Inputfelder in der entsprechenden Farbe.
+             * 
+             */
+            function userFeedback(correct) {
+                elemF = $('#InputSwapFirst');
+                elemS = $('#InputSwapSecond');
+
+                if(! correct) {
+                    elemF.css('border-color', 'red');  
+                    elemS.css('border-color', 'red');  
+
+                    elemF.fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+                    elemS.fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+
+                } else {
+                    elemF.css('border-color', 'green');  
+                    elemS.css('border-color', 'green');  
+
+                    elemF.fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+                    elemS.fadeOut(100).fadeIn(100).fadeOut(100).fadeIn(100);
+                }
+
+                $(document).ready(function () {
+                    setTimeout( function ( ) {
+                         elemF.css('border-color', '#7892c2');
+                         elemS.css('border-color', '#7892c2');
+                       },500);
+                  });
+            }
+
+
         };
     };
 
