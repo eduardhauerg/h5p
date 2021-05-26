@@ -1,21 +1,21 @@
 {
-    "title": "Quick-Sort",
-    "description": "Lets the user sort a list",
+  "title": "Quick-Sort",
+  "description": "Lets the user sort a list",
+  "majorVersion": 5,
+  "minorVersion": 0,
+  "patchVersion": 1,
+  "runnable": 1,
+  "author": "Eduard",
+  "machineName": "H5P.QuickSort",
+  "coreApi": {
     "majorVersion": 1,
-    "minorVersion": 0,
-    "patchVersion": 1,
-    "runnable": 1,
-    "author": "Eduard",
-    "machineName": "H5P.QuickSort",
-    "coreApi": {
-      "majorVersion": 1,
-      "minorVersion": 19
-    },
-    "preloadedJs": [
-      { "path": "Quicksort.js" }
-    ],
+    "minorVersion": 19
+  },
+  "preloadedJs": [
+    { "path": "Quicksort.js" }
+  ],
 
-    "preloadedCss": [
-        { "path": "Quicksort.css" }
-      ]
-  }
+  "preloadedCss": [
+      { "path": "Quicksort.css" }
+    ]
+}

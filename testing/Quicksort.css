@@ -1,173 +1,147 @@
 .QuickSort {
-    width: 650px;
-    height: 475px;
-    margin: 0 auto;
-    border: 1px solid #ccc;
-    box-shadow: 2px 2px 4px #ccc;
-  }
+  width: 687px;
+  height: 600px;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  box-shadow: 2px 2px 4px #ccc;
+  display: flex;
+  flex-direction: column;
+}
 
 .QuickSort #ul-div {
-    width:100%;
-    display: flex;
-    justify-content: center;
-    font-family: Arial, sans-serif;  
-  
+  margin-top: 1%;
+  display: flex;
+  justify-content: center;
+  width:100%;;
+  font-family: Arial, sans-serif;
 }
 
- .QuickSort #UnLi{
-    transform: translate(-45px, 50px);
-     display: inline-block;
-     font-size: 25px;
-     font-weight: 800;
-     margin: auto;
-     color: black;   
-    } 
+.QuickSort #UnLi {
+  font-size: 26px;
+  font-weight: 800;
+  color: black;
+  }
 
+.QuickSort #labelsinputbuttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    margin-top: 75px;
+  }
+
+.QuickSort #labels {
+    display: flex;
+    min-width: 100px;
+    flex-direction: column;
+}
+
+.QuickSort .index-group {
+    display: flex;
+    flex-direction: row;
+    margin-bottom: 21px;
+    margin-top: 7px;
+} 
+
+.QuickSort .pivot-group {
+    display: flex;
+    flex-direction: row;
+}
+
+.QuickSort #inputdiv {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}  
 
 .QuickSort .inputSwap {
-    transform: translate(255px, 30px);
-    display: inline-block;
-    width: 50px;
-    height: 50px;
-    font-size: larger;
-    padding:10px;
-    border: 2px solid #7892c2;
-    border-radius:10px;
-    text-align: center;
+  display: inline-block;
+  width: 35px; 
+  height: 35px;
+  font-size: larger;
+  border: 3px solid #7892c2;
+  border-radius:10px;
+  text-align: center;
+  margin: 5px;
 }
 
-.QuickSort #InputSwapSecond {
-  transform: translate(260px, 30px);
+.QuickSort .btn-group {
+  display: flex;
+  flex-direction: column;
+  flex-wrap: wrap-reverse;
+}
+
+.QuickSort .button {
+  color: black;
+  text-decoration: none;
+  text-align: center;
+  font-size: 15px;
+  height: 30px ;
+  width: 120px;
+  color:#ffffff;
+  background:linear-gradient(to bottom, #7892c2 5%, #476e9e 100%);
+  border-radius:28px;
+  border:1px black;
+  cursor:pointer;
+  margin: 5px;
+}
+
+.QuickSort #PivotLabelInput{
+  color: #7892c2;
+}
+.QuickSort #IndexLabelInput{
+  color: #7892c2;
+}
+
+.QuickSort #lastinputdiv {
+  display: flex;
+  margin: 55px;
+  margin-top: 40px;
+  min-height: 50px; 
+}
+
+.QuickSort .lastInput {
+  display: inline-block;
+  margin: 5px;
+}
+
+.QuickSort #VerifiedInputs {
+  color: #7892c2;
+}
+
+.QuickSort #bardiv {
+  display: flex;
+  margin-top: 30px;
 }
 
 #myProgress {
-    transform: translate(0px, 155px);
-    width: 75%;
-    background-color: #D3D3D3;
-    margin: auto;
-    border: 2px solid #7892c2;
-    border-radius:10px;
-  }
-    
-  #myBar {        
-    width: 00%;
-    height: 22px;
-    background-color: #04AA6D;
-    text-align: center; /* To center it horizontally (if you want) */
-    line-height: 20px; /* To center it vertically */
-    color: white;
-    border-radius:10px;
-  }
-
-  .btn-group .button {
-    color: black;
-    text-decoration: none;
-    text-align: center;
-    font-size: 15px;
-    height: 30px ;
-    width: 120px;
-    display: block;
-    transform: translate(450px, 85px);
-    color:#ffffff;
-    background:linear-gradient(to bottom, #7892c2 5%, #476e9e 100%);
-    border-radius:28px;
-    border:1px black;
-    cursor:pointer;
-  }
-
-  .QuickSort #ButtonPart {
-    transform: translate(450px, 90px);
-  }
-
-  .QuickSort .index-group {
-    transform: translate(80px, 135px);
-    display: flex;
-  } 
-  .QuickSort .pivot-group {
-    transform: translate(80px, 135px);
-    display: flex;
-  }
-
-  .QuickSort #start {
-    transform: translate(270px, 180px);
-  }
-
-  .QuickSort #VerifiedInputs{
-    transform: translate(20px, 20px);
-  }
-
-  .QuickSort #PivotLabelInput{
-    color: #7892c2;
-  }
-  .QuickSort #IndexLabelInput{
-    color: #7892c2;
-  }
-  *, *::after, *::before {
-    box-sizing: border-box;
-  }
+  width: 75%;
+  background-color: #D3D3D3;
+  margin: auto;
+  border: 3px solid #7892c2;
+  border-radius:10px;
+}
   
-  .modal {
-    position: fixed;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%) scale(0);
-    transition: 200ms ease-in-out;
-    border: 1px solid black;
-    border-radius: 10px;
-    z-index: 10;
-    background-color: white;
-    width: 500px;
-    max-width: 80%;
-  }
-  
-  .modal.active {
-    transform: translate(-50%, -50%) scale(1);
-  }
-  
-  .modal-header {
-    padding: 10px 15px;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    border-bottom: 1px solid black;
-  }
-  
-  .modal-header .title {
-    font-size: 1.25rem;
-    font-weight: bold;
-  }
-  
-  .modal-header .close-button {
-    cursor: pointer;
-    border: none;
-    outline: none;
-    background: none;
-    font-size: 1.25rem;
-    font-weight: bold;
-  }
-  
-  .modal-body {
-    padding: 10px 15px;
-  }
-  
-  #overlay {
-    position: fixed;
-    opacity: 0;
-    transition: 200ms ease-in-out;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: rgba(0, 0, 0, .5);
-    pointer-events: none;
-  }
-  
-  #overlay.active {
-    opacity: 1;
-    pointer-events: all;
-  }
+#myBar {        
+  width: 00%;
+  height: 25px;
+  background-color: #04AA6D;
+  text-align: center;
+  line-height: 20px; 
+  color: white;
+  border-radius:6px;
+}
 
-  .QuickSort #modalbutton {
-    transform: translate(30px, 200px);
+.QuickSort #detailsdiv {
+  display: flex;
+  margin: 10px;
+}
 
-  }
+details summary { 
+  cursor: pointer;
+  color: #7892c2;
+}
+
+details summary > * {
+  display: inline;
+}
+
