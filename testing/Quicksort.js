@@ -15,10 +15,12 @@ H5P.QuickSort = (function ($) {
         // Keep provided id.
         this.id = id;
         this.options.toSort = this.options.toSort.split(',').map(x => + x);
+        this.parts = this.options.parts;
         //diese Variablen dienen dazu, die aktuelle Teilliste jederzeit abfragen zu können
         this.currentBegin = 0;
         this.currentEnd = this.options.toSort.length - 1;
-
+        this.swapCounter = 1;
+ 
         /*
         Das Array sortet wird durch den Quick-Sort Algorithmus gefüllt
         Das Array sortetTemp dient dazu, den Kopf der Liste sortet nach und nach zu entnehmen und zu speichern
@@ -60,6 +62,22 @@ H5P.QuickSort = (function ($) {
         this.stepSize;
 
         self.attach = function ($container) {
+            
+            function countSwaps() {
+                var partCounter = self.parts;
+                for(i = 0; i < self.fData.length; i++) {
+                    if(self.fData[i] == 1) {
+                        partCounter--;
+                        if(partCounter == 0) {
+                            break;
+                        }
+                    }
+                    if(self.fData[i] == 0) {
+                        self.swapCounter++;
+                    }
+                }
+            }
+
 
             // Set class on container to identify it as a greeting card
             // container.  Allows for styling later.
@@ -106,6 +124,10 @@ H5P.QuickSort = (function ($) {
 
             $container.append('<div id="bardiv" ><div id="myProgress"><div id="myBar"></div></div> </div>');
 
+            $container.append('<div id="detailsdiv">    <details id="instruction"> <summary>Hilfe</summary <p> Die Liste soll mittels Quick-Sort sortiert werden.' +
+                ' Dazu müssen die korrekten Indizes eingegeben, und die entsprechende Methode mithilfe der Buttons ausgeführt werden. Das aktuelle Pivot wird automatisch berechnet und eingeblendet.' +
+                ' Bei richtiger Eingabe bewegt sich der Fortschrittsbalken. Zur Lösung ist es notwendig, <b>exakt</b> den Algorithmus aus der Vorlesung anzuwenden.</p></details>   </div>');
+
 
             /**
              * 
@@ -114,16 +136,34 @@ H5P.QuickSort = (function ($) {
             width = 0;
             cnt = 0;
             function update() {
+                console.log("parts: " + self.parts);
+
                 cnt++;
-                var element = document.getElementById("myBar");
-                width += parseInt(self.stepSize);
-                //Wenn diese Bedingung zutrifft, ist der Durchlauf erreicht und die Rundungsfehler müssen ausgeglichen werden 
-                if (cnt == self.numberOfCalls) {
+                console.log(self.swapCounter);
+                //Wenn diese Bedingung zutrifft, ist der Durchlauf erreicht und Rundungsfehler müssen ausgeglichen werden 
+                if (cnt == self.swapCounter) {
                     width = 100;
+
+                    document.getElementById("ButtonSwap").disabled = true;
+                    document.getElementById("ButtonPart").disabled = true;
+    
+                    document.getElementById("InputSwapFirst").disabled = true;
+                    document.getElementById("InputSwapSecond").disabled = true;
+                } else {
+                    width += parseInt(self.stepSize);
+
+
                 }
+
+                var element = document.getElementById("myBar");
                 element.style.width = width + '%';
                 element.innerHTML = width + "%";
             }
+            /**
+             *
+             * Sobald das Dokument geladen wurde, wird der Quick-Sort Algorithmus durchgeführt. 
+             * Die beiden Datenstrukturen zur Validierung der Benutzereingabe (data und fData), werden so gefüllt.
+             */
 
             $(document).ready(function () {
 
@@ -140,18 +180,26 @@ H5P.QuickSort = (function ($) {
 
 
                 $('#PivotLabelInput').empty().append(self.pivotList[0]);
-                self.stepSize = 100 / self.fData.length;
                 self.numberOfCalls = self.fData.length;
+
+                // Um den ersten Aufruf von Partitioniere nicht eingeben zu müssen, wird diese hier zunächst entfernt
+                self.fData.shift();
+                
+                self.data.shift();
+                self.data.shift();
+
+                countSwaps();
+                console.log(self.swapCounter);
+                //self.stepSize = 100 / self.fData.length;
+                self.stepSize = 100 / self.swapCounter;
             });
 
-            $container.append('<div id="detailsdiv">    <details id="instruction"> <summary>Hilfe</summary <p> Die Liste soll mittels Quick-Sort sortiert werden.' +
-                ' Dazu müssen die korrekten Indizes eingegeben, und die entsprechende Methode mithilfe der Buttons ausgeführt werden. Das aktuelle Pivot wird automatisch berechnet und eingeblendet.' +
-                ' Bei richtiger Eingabe bewegt sich der Fortschrittsbalken. Zur Lösung ist es notwendig, <b>exakt</b> den Algorithmus aus der Vorlesung anzuwenden.</p></details>   </div>');
-
+            /**
+             * Diese beiden Methoden dienen dazu, die Benutzereingaben aus den beiden Inputfeldern entgegen zunehmen, sofern diese mit dem Index übereinstimmen. 
+             */
             function getFirstInput() {
                 val = document.getElementById("InputSwapFirst").value;
                 if (val) {
-
                     if ((self.currentBegin >= val) || (val <= self.currentEnd)) {
                         return val;
                     }
@@ -162,15 +210,19 @@ H5P.QuickSort = (function ($) {
             function getSecondInput() {
                 val = document.getElementById("InputSwapSecond").value;
                 if (val) {
-
                     if ((self.currentBegin >= val) || (val <= self.currentEnd)) {
                         return val;
                     }
                 }
                 return 0;
             }
-
-            inputswapfirstBool = false;
+            /**
+             * 
+             * Mithilfe dieser Methode werden die gewählten Indizes farblich markiert. 
+             * Der Parameter leftInput bzw. rightInput sind in das Objekt ausgelagert, um so ein ggf. vorher ausgewähltes Element 
+             * wieder in die ursprüngliche Farbe zurücksetzen zukönnen, bevor das neu gewählte Element markiert wird. 
+             * 
+             */
             document.getElementById("InputSwapFirst").onchange = function () {
                 input = getFirstInput();
 
@@ -180,9 +232,7 @@ H5P.QuickSort = (function ($) {
                 self.leftInput = markSelected(input);
             }
 
-            inputswapsecondBool = false;
             document.getElementById("InputSwapSecond").onchange = function () {
-
                 input = getSecondInput();
 
                 if ((self.rightInput != self.leftInput)) {
@@ -196,61 +246,6 @@ H5P.QuickSort = (function ($) {
                 document.getElementById(b).style.color = "#7892c2";
 
                 return b;
-            }
-
-            function swap(items, leftIndex, rightIndex) {
-                self.fData.push(0);
-                self.data.push(leftIndex);
-                self.data.push(rightIndex);
-
-                var temp = items[leftIndex];
-                items[leftIndex] = items[rightIndex];
-                items[rightIndex] = temp;
-            }
-
-            function partition(items, li, re, piv) {
-                //Die Abfrage des Boolean b dient dazu, den ersten Partitionsaufruf nicht mitzuzählen
-                if (!self.firstPartition) {
-                    self.fData.push(1);
-                    self.data.push(li);
-                    self.data.push(re);
-                }
-                self.firstPartition = false;
-
-
-                var i = li; //left pointer
-                var j = re - 1; //right pointer
-                var k = items[piv];
-                swap(items, piv, re);
-
-                while (i < j) {
-                    while ((items[i] <= k) && (i < re)) {
-                        i = i + 1;
-                    }
-                    while ((items[j] >= k) && (j > li)) {
-                        j = j - 1;
-                    }
-                    if (i < j) {
-                        swap(items, i, j); //sawpping two elements
-                    }
-                }
-                if (items[i] > k) {
-                    swap(items, i, re);
-                }
-                self.sortet.push(i);
-                return i;
-            }
-
-            function quickSort(items, li, re) {
-                if (li < re) {
-
-                    var pivpos = Math.floor((li + re) / 2);
-                    self.pivotList.push(self.options.toSort[pivpos]);
-                    pivpos = partition(items, li, re, pivpos);
-
-                    quickSort(items, li, (pivpos - 1));
-                    quickSort(items, (pivpos + 1), re);
-                }
             }
 
             /*
@@ -280,11 +275,13 @@ H5P.QuickSort = (function ($) {
 
                         userFeedback(true);
                         update();
-
+                        
+                        //Hier werden die entsprechenden Elemente in der eingeblendeten Liste getauscht.
                         temp = self.toDisplay[swapFirstRef];
                         self.toDisplay[swapFirstRef] = self.toDisplay[swapSecRef];
                         self.toDisplay[swapSecRef] = temp;
 
+                        //Die Liste wird geleert und neu gerendert
                         $listSelector = $("#UnLi").empty();
                         showList();
 
@@ -299,7 +296,6 @@ H5P.QuickSort = (function ($) {
                 }
             }
 
-
             document.getElementById("ButtonPart").onclick = function () {
                 if (self.fData[0] == 1) {
 
@@ -313,16 +309,13 @@ H5P.QuickSort = (function ($) {
                     * */
                     $('#InputSwapFirst').val('');
                     $('#InputSwapSecond').val('');
-                    /**
-                     * Hier werden die Benutzereingaben mit den korrekten Werten des zuvor durchgeführten Algorithmus verglichen
-                     * Bei korrekter Eingabe werden die Referenzwerte des Algorithmus vom Stack gepopt
-                     *  */
                     if ((partFirstIn == partFirstRef) && (partpSecIn == partSecRef)) {
                         self.pivotList.shift();
                         self.data.shift();
                         self.data.shift();
                         self.fData.shift();
 
+                        //Hier wird der Beginn und das Ende der aktuellen Teilliste neu gesetzt
                         self.currentBegin = partFirstRef;
                         self.currentEnd = partSecRef;
                         
@@ -345,9 +338,11 @@ H5P.QuickSort = (function ($) {
                     userFeedback(false);
                 }
             }
+
+
             /**
              * 
-             * Diese Methode dient zum visuellen Benutzer Feedback nach der Eingabe.
+             * Diese Methode dient zum visuellen Benutzer-Feedback nach der Eingabe.
              * Bei Eingabe eines Ergebnis, blinken die Ränder der Inputfelder in der entsprechenden Farbe.
              * 
              */
@@ -374,10 +369,63 @@ H5P.QuickSort = (function ($) {
                     setTimeout( function ( ) {
                          elemF.css('border-color', '#7892c2');
                          elemS.css('border-color', '#7892c2');
-                       },500);
+                       }, 500);
                   });
             }
+            /**
+             *
+             * Ab hier Quick-Sort Algorithmus 
+             */
+            function swap(items, leftIndex, rightIndex) {
+                self.fData.push(0);
+                self.data.push(leftIndex);
+                self.data.push(rightIndex);
 
+                var temp = items[leftIndex];
+                items[leftIndex] = items[rightIndex];
+                items[rightIndex] = temp;
+            }
+
+            function partition(items, li, re, piv) {
+                    self.fData.push(1);
+                    self.data.push(li);
+                    self.data.push(re);
+
+
+                var i = li; 
+                var j = re - 1; 
+                var k = items[piv];
+                swap(items, piv, re);
+
+                while (i < j) {
+                    while ((items[i] <= k) && (i < re)) {
+                        i = i + 1;
+                    }
+                    while ((items[j] >= k) && (j > li)) {
+                        j = j - 1;
+                    }
+                    if (i < j) {
+                        swap(items, i, j); 
+                    }
+                }
+                if (items[i] > k) {
+                    swap(items, i, re);
+                }
+                self.sortet.push(i);
+                return i;
+            }
+
+            function quickSort(items, li, re) {
+                if (li < re) {
+
+                    var pivpos = Math.floor((li + re) / 2);
+                    self.pivotList.push(self.options.toSort[pivpos]);
+                    pivpos = partition(items, li, re, pivpos);
+
+                    quickSort(items, li, (pivpos - 1));
+                    quickSort(items, (pivpos + 1), re);
+                }
+            }
 
         };
     };

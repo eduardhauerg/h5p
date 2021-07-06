@@ -1,7 +1,7 @@
 {
   "title": "Quick-Sort",
   "description": "Lets the user sort a list",
-  "majorVersion": 5,
+  "majorVersion": 8,
   "minorVersion": 0,
   "patchVersion": 1,
   "runnable": 1,

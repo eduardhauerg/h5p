@@ -23,10 +23,11 @@
   margin:0;
   padding:0;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   }
 .QuickSort #UnLi li {
   padding: .31em;
+  margin: 10px;
  /* border: 1px solid #7892c2;
   line-height: 1;*/
 }
@@ -72,8 +73,8 @@
 
 .QuickSort .inputSwap {
   display: inline-block;
-  width: 35px; 
-  height: 35px;
+  width: 45px; 
+  height: 45px;
   font-size: larger;
   border: 3px solid #7892c2;
   border-radius:10px;
@@ -122,7 +123,7 @@
 
 .QuickSort #bardiv {
   display: flex;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 #myProgress {
@@ -156,4 +157,6 @@ details summary {
 details summary > * {
   display: inline;
 }
+
+
 
