@@ -151,7 +151,8 @@
 
 details summary { 
   cursor: pointer;
-  color: #7892c2;
+  color: red;
+  font-weight: bold;
 }
 
 details summary > * {

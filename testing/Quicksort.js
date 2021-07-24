@@ -94,7 +94,7 @@ H5P.QuickSort = (function ($) {
                     $('#UnLi').append($('<li class="horizontal" id="' + index + '"></li>').html(new_html));
                     //Diese Abfrage dient dazu, nur die aktuelle Teilliste fett darzustellen
                     if (index < self.currentBegin || index > self.currentEnd) {
-                        console.log(index);
+                        //console.log(index);
                         $('#' + index).css("font-weight", "100");
                     }
                     $('#' + index).mouseover(function () {
@@ -126,7 +126,8 @@ H5P.QuickSort = (function ($) {
 
             $container.append('<div id="detailsdiv">    <details id="instruction"> <summary>Hilfe</summary <p> Die Liste soll mittels Quick-Sort sortiert werden.' +
                 ' Dazu müssen die korrekten Indizes eingegeben, und die entsprechende Methode mithilfe der Buttons ausgeführt werden. Das aktuelle Pivot wird automatisch berechnet und eingeblendet.' +
-                ' Bei richtiger Eingabe bewegt sich der Fortschrittsbalken. Zur Lösung ist es notwendig, <b>exakt</b> den Algorithmus aus der Vorlesung anzuwenden.</p></details>   </div>');
+                ' Bei richtiger Eingabe bewegt sich der Fortschrittsbalken. Zur Lösung ist es notwendig, <b>exakt</b> den Algorithmus aus der Vorlesung anzuwenden.'+
+                ' Der aktuell ausgewählte Index wird im linken Bildschirmbereich eingeblendet </p></details>   </div>');
 
 
             /**
@@ -136,10 +137,10 @@ H5P.QuickSort = (function ($) {
             width = 0;
             cnt = 0;
             function update() {
-                console.log("parts: " + self.parts);
+                //console.log("parts: " + self.parts);
 
                 cnt++;
-                console.log(self.swapCounter);
+                //console.log(self.swapCounter);
                 //Wenn diese Bedingung zutrifft, ist der Durchlauf erreicht und Rundungsfehler müssen ausgeglichen werden 
                 if (cnt == self.swapCounter) {
                     width = 100;
@@ -168,9 +169,9 @@ H5P.QuickSort = (function ($) {
             $(document).ready(function () {
 
                 quickSort(self.options.toSort, 0, self.options.toSort.length - 1);
-                console.log(self.data);
+                /*console.log(self.data);
                 console.log(self.fData);
-                console.log("liste: " + self.options.toSort);
+                console.log("liste: " + self.options.toSort);*/
 
                 document.getElementById("ButtonSwap").disabled = false;
                 document.getElementById("ButtonPart").disabled = false;
@@ -189,7 +190,7 @@ H5P.QuickSort = (function ($) {
                 self.data.shift();
 
                 countSwaps();
-                console.log(self.swapCounter);
+                //console.log(self.swapCounter);
                 //self.stepSize = 100 / self.fData.length;
                 self.stepSize = 100 / self.swapCounter;
             });
